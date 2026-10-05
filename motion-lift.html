@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motion Lift Pro · footy1x</title>
+<meta name="description" content="Motion Lift turns a dense After Effects track into a few clean keyframes with the exact eases. Free Lite version; Pro is $3.">
+<!-- Motion Lift's details page (the store front is index.html). Hosted free on GitHub Pages from the
+     motion-lift-releases repo (index.html + panel.png at the repo root; python3 extension/release.py site uploads them).
+     "Get Pro" = the Lemon Squeezy checkout link (store motionliftbyfooty1x #490232, product Motion Lift Pro #1412504). -->
+<style>
+  :root {
+    --bg: #1b1b1b; --surface: #232323; --surface-2: #2b2b2b; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
+    --text-1: #f2f2f2; --text-2: #b9b9b9; --text-3: #8a8a8a; --accent: #ff7a3d; --accent-ink: #220f05; --accent-soft: rgba(255,122,61,.1);
+    --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--text-1); font: 16px/1.6 var(--font); }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  header.top { display: flex; align-items: center; gap: 10px; padding: 22px 0; }
+  .mark { width: 26px; height: 26px; }
+  .brand { font-weight: 650; letter-spacing: -.01em; }
+  .brand span { color: var(--text-2); font-weight: 500; }
+  .top nav { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
+  .top nav a { color: var(--text-2); text-decoration: none; }
+  .top nav a:hover { color: var(--text-1); }
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding: 40px 0 64px; }
+  h1 { font-size: clamp(34px, 5vw, 52px); line-height: 1.05; letter-spacing: -.025em; margin: 0 0 18px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lede { font-size: 18px; color: var(--text-2); margin: 0 0 28px; max-width: 34em; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; }
+  .btn-accent { background: var(--accent); color: var(--accent-ink); }
+  .btn-accent:hover { background: #ff8b55; }
+  .btn-ghost { color: var(--text-1); box-shadow: inset 0 0 0 1px var(--line-2); }
+  .btn-ghost:hover { background: var(--surface-2); }
+  .fine { font-size: 13px; color: var(--text-3); margin-top: 12px; }
+  .shot { justify-self: center; width: 100%; max-width: 360px; border-radius: 14px; box-shadow: 0 0 0 1px var(--line-2), 0 30px 80px rgba(0,0,0,.45); }
+  section { padding: 56px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 26px; letter-spacing: -.015em; margin: 0 0 20px; }
+  h3 { font-size: 17px; margin: 0 0 6px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: s; }
+  .step { background: var(--surface); border-radius: 12px; padding: 20px; box-shadow: inset 0 0 0 1px var(--line); }
+  .step::before { counter-increment: s; content: counter(s); display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+                  background: var(--accent-soft); color: var(--accent); font-weight: 650; font-size: 14px; margin-bottom: 10px; }
+  .step p, .cols p, li { color: var(--text-2); margin: 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--text-3); font-weight: 500; font-size: 13px; }
+  td:first-child { color: var(--text-1); }
+  td { color: var(--text-2); }
+  .yes { color: var(--accent); font-weight: 600; }
+  .price { font-size: 22px; font-weight: 700; color: var(--text-1); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px; }
+  ul { padding-left: 20px; margin: 0; }
+  li { margin: 4px 0; }
+  code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; color: var(--text-1); }
+  footer { padding: 36px 0 56px; border-top: 1px solid var(--line); font-size: 14px; color: var(--text-3); display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 16px; }
+    .steps, .cols { grid-template-columns: 1fr; }
+    .top nav { display: none; }
+    .wrap { padding: 0 16px; }
+    th, td { padding: 10px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <svg class="mark" viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(255,255,255,.14)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg>
+    <div class="brand"><a href="./" style="color:inherit;text-decoration:none">footy1x</a> <span>/ Motion Lift</span></div>
+    <nav><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#licence">Licence</a><a href="#support">Support</a></nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>Copy a move's <em>exact ease</em> in one click.</h1>
+      <p class="lede">Track the move in your reference, select the tracked property, click Lift. Motion Lift replaces hundreds of tracked
+        keyframes with a few clean ones whose speed curve matches the original, and keeps the handheld shake on a separate control.</p>
+      <div class="cta">
+        <a class="btn btn-accent" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/9d9c67b7-6690-43b6-a95e-e31976ab8b28">Get Pro for $3</a>
+        <a class="btn btn-ghost" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free (Lite)</a>
+      </div>
+      <p class="fine">One download for everyone: it runs as Lite until you enter a Pro key. After Effects 2022 or later, macOS.</p>
+    </div>
+    <img class="shot" src="panel.png" width="520" height="1180" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with the reference and lifted speed curves on top of each other">
+  </div>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><h3>Track the move</h3><p>With After Effects' own tracker, Mocha AE or Motion Sketch, so the property has a key on every frame.</p></div>
+      <div class="step"><h3>Click Lift</h3><p>Motion Lift finds where each move starts and stops and fits Bezier eases to the reference's speed. One undo step.</p></div>
+      <div class="step"><h3>Edit like your own keys</h3><p>You get a few ordinary keyframes. The shake goes on an "ML Shake" effect, switched off, to keep or delete.</p></div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2>Lite and Pro</h2>
+    <table>
+      <thead><tr><th></th><th>Lite <span class="fine">free</span></th><th>Pro <span class="price">$3</span> <span class="fine">one-time</span></th></tr></thead>
+      <tbody>
+        <tr><td>Lift a tracked move into a few eased keys</td><td>One property at a time</td><td class="yes">Every selected property at once</td></tr>
+        <tr><td>Speed / value graph, error and peak speed</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Shake split onto its own effect</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Track for me (finds cuts, camera moves and moving things, adds keyed nulls)</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Preset library: save a lifted ease, apply it anywhere</td><td>No</td><td class="yes">Yes</td></tr>
+        <tr><td>Copy an ease as CSS <code>cubic-bezier()</code></td><td>No</td><td class="yes">Yes</td></tr>
+        <tr><td>Updates</td><td>Yes, in the panel</td><td>Yes, in the panel</td></tr>
+      </tbody>
+    </table>
+    <p class="fine">Prices in US dollars; taxes are added at checkout where they apply. Checkout and receipts are handled by Lemon Squeezy, our reseller.</p>
+  </section>
+
+  <section id="install">
+    <h2>Install</h2>
+    <div class="cols">
+      <div>
+        <h3>1. Download</h3>
+        <p>Get <code>MotionLift-x.y.z.zxp</code> from the <a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">latest release</a> (Pro buyers also get it with their receipt).</p>
+      </div>
+      <div>
+        <h3>2. Install the .zxp</h3>
+        <p>With a free ZXP installer such as aescripts' ZXP Installer or Anastasiy's Extension Manager. Restart After Effects, then
+          <strong>Window &gt; Extensions &gt; Motion Lift</strong>.</p>
+      </div>
+      <div>
+        <h3>3. Pro: enter your key</h3>
+        <p>Open <strong>Licence</strong> at the bottom of the panel, paste the key from your receipt email, click <strong>Activate</strong>.</p>
+      </div>
+      <div>
+        <h3>Updates</h3>
+        <p>The panel checks for a new version once a day and installs it when you click <strong>Install</strong>. Restart After Effects to finish.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="licence">
+    <h2>Licence, privacy and refunds</h2>
+    <div class="cols">
+      <div>
+        <h3>Your licence</h3>
+        <ul>
+          <li>One Pro licence is for one person, on up to 2 computers.</li>
+          <li>To move it, click <strong>Deactivate</strong> in the panel on the old computer, then activate on the new one.</li>
+          <li>After activating, Pro works offline for up to 14 days at a time; it renews itself when you're online.</li>
+          <li>Please don't share your key or the installer files. Anyone can download Lite from this page.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What the panel sends</h3>
+        <ul>
+          <li>When you activate or renew Pro: your licence key, a one-way hash of your computer's hardware id (not the id itself) and the Motion Lift version, to our licence server, which checks the key with Lemon Squeezy.</li>
+          <li>Once a day: a request for the latest version number, from GitHub.</li>
+          <li>Nothing else. Your footage, projects and keyframes never leave your computer, and there's no tracking or analytics.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Refunds</h3>
+        <p>All sales are final. If your key won't activate or Pro doesn't work on your computer, email us and we'll sort it out.</p>
+      </div>
+      <div>
+        <h3>Requirements</h3>
+        <p>After Effects 2022 (22.0) or later on macOS. Windows: coming later. Track for me also needs the free tool
+          <code>uv</code>; the panel tells you how to get it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="support">
+    <h2>Support</h2>
+    <p class="lede" style="margin:0">Questions, a key that won't activate, or a refund: <a href="mailto:Footy1x.ae@gmail.com">Footy1x.ae@gmail.com</a>. We usually answer within two days.</p>
+  </section>
+
+  <footer>
+    <span>&copy; 2026 Motion Lift</span>
+    <span>After Effects is a trademark of Adobe. Motion Lift isn't made by or affiliated with Adobe.</span>
+  </footer>
+</div>
+</body>
+</html>
