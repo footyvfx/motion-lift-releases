@@ -36,6 +36,7 @@
   .btn-accent:hover { background: #ff8b55; }
   .btn-ghost { color: var(--text-1); box-shadow: inset 0 0 0 1px var(--line-2); }
   .btn-ghost:hover { background: var(--surface-2); }
+  .btn-soon { color: var(--text-2); box-shadow: inset 0 0 0 1px var(--line-2); cursor: default; font-weight: 500; }
   .fine { font-size: 13px; color: var(--text-3); margin-top: 12px; }
   .shot { justify-self: center; width: 100%; max-width: 360px; border-radius: 14px; box-shadow: 0 0 0 1px var(--line-2), 0 30px 80px rgba(0,0,0,.45); }
   section { padding: 56px 0; border-top: 1px solid var(--line); }
@@ -81,8 +82,9 @@
       <p class="lede">Track the move in your reference, select the tracked property, click Lift. Motion Lift replaces hundreds of tracked
         keyframes with a few clean ones whose speed curve matches the original, and keeps the handheld shake on a separate control.</p>
       <div class="cta">
-        <a class="btn btn-accent" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/9d9c67b7-6690-43b6-a95e-e31976ab8b28">Get Pro for $3</a>
-        <a class="btn btn-ghost" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free (Lite)</a>
+        <!-- PRO-SOON: until Lemon Squeezy approves the store. Going live: put back <a class="btn btn-accent" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/9d9c67b7-6690-43b6-a95e-e31976ab8b28">Get Pro for $3</a> first and make the download btn-ghost -->
+        <a class="btn btn-accent" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free (Lite)</a>
+        <span class="btn btn-soon" aria-disabled="true">Pro ($3): coming in a few days</span>
       </div>
       <p class="fine">One download for everyone: it runs as Lite until you enter a Pro key. After Effects 2022 or later, macOS.</p>
     </div>
