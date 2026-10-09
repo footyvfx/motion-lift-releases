@@ -93,7 +93,7 @@ function start(box) {
   pmrem.dispose();
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 60);
-  const CAM = new THREE.Vector3(0, 0.3, 6.6);
+  const CAM = new THREE.Vector3(0, 0.28, 5.9);   // 12% closer than 6.6: a bigger keyframe that still fits when squashed
   camera.position.copy(CAM);
   camera.lookAt(0, 0, 0);
 
@@ -147,8 +147,10 @@ function start(box) {
   const light = matchMedia("(pointer: coarse)").matches || innerWidth < 700;    // phones: a lighter mesh, still smooth
   const mesh = new THREE.Mesh(welded(new THREE.IcosahedronGeometry(1, light ? 40 : 64)), mat);
   mesh.frustumCulled = false;                   // the vertex shader moves it outside its unit-sphere bounds
+  // the grab area: an invisible sphere much wider than the diamond (1.62 vs its 1.18 corners), so a press anywhere on or
+  // around it catches it; the pull starts from the surface point in that direction
   const proxy = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshBasicMaterial({ visible: false }));
-  proxy.scale.set(1.25, 1.25, 0.6);
+  proxy.scale.set(1.62, 1.62, 1.1);
   spin.add(mesh, proxy);
 
   // ------------------------------------------------------------------------------------------------ springs
