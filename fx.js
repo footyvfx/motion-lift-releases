@@ -268,16 +268,22 @@
     ring.appendChild(label);
     document.body.appendChild(ring);
     var x = 0, y = 0, vx = 0, vy = 0, tx = 0, ty = 0, on = false, last = performance.now();
+    // what's under the pointer, read from the page (not e.target: while the keyframe is held, every move targets its
+    // canvas wherever the pointer is), again on release so a "drag" label never outlives the drag
+    function look(e) {
+      var t = document.elementFromPoint(e.clientX, e.clientY);
+      var key = t && t.closest && t.closest("[data-keyframe] canvas") && t.style.cursor && t.style.cursor !== "";
+      ring.classList.toggle("hot", !!(t && t.closest && t.closest("a, button, .btn")) || !!key);
+      ring.classList.toggle("drag", !!key);
+      label.textContent = key ? "drag" : "";
+    }
     addEventListener("pointermove", function (e) {
       if (e.pointerType !== "mouse") return;
       tx = e.clientX; ty = e.clientY;
       if (!on) { x = tx; y = ty; on = true; ring.classList.add("on"); }
-      var t = e.target && e.target.closest ? e.target : null;
-      var key = t && t.closest("[data-keyframe] canvas") && t.style.cursor && t.style.cursor !== "";
-      ring.classList.toggle("hot", !!(t && t.closest("a, button, .btn")) || !!key);
-      ring.classList.toggle("drag", !!key);
-      label.textContent = key ? "drag" : "";
+      look(e);
     }, { passive: true });
+    addEventListener("pointerup", function (e) { if (e.pointerType === "mouse") setTimeout(function () { look(e); }, 0); }, { passive: true });
     document.documentElement.addEventListener("mouseleave", function () { on = false; ring.classList.remove("on"); });
     (function tick(now) {
       var dt = Math.min((now - last) / 1000, 1 / 30);
