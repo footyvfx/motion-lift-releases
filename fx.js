@@ -197,14 +197,22 @@
     var text = el.textContent, pool = text.replace(/\s/g, ""), raf = 0;
     if (!el.hasAttribute("aria-label")) el.setAttribute("aria-label", text);
     if (reduce) return;
+    // scrambled letters are wider or narrower than the real ones: the link keeps its own width meanwhile (anything wider
+    // is clipped), or it shoves its neighbours back and forth every frame (the menu jittered: Callum, 9 Oct 2026). A
+    // scramble that's running isn't restarted.
     el.addEventListener("pointerenter", function () {
-      var start = performance.now();
-      cancelAnimationFrame(raf);
+      if (raf) return;
+      var start = performance.now(), w = el.getBoundingClientRect().width;
+      el.style.display = "inline-block"; el.style.width = w + "px"; el.style.whiteSpace = "nowrap"; el.style.overflow = "hidden";
+      el.style.verticalAlign = "bottom";
       (function tick(now) {
         var p = Math.min(1, (now - start) / 450), shown = Math.floor(p * text.length), s = "";
         for (var i = 0; i < text.length; i++) s += i < shown || text[i] === " " ? text[i] : pool[(Math.random() * pool.length) | 0];
         el.textContent = s;
-        if (p < 1) raf = requestAnimationFrame(tick);
+        if (p < 1) { raf = requestAnimationFrame(tick); return; }
+        raf = 0;
+        el.textContent = text;
+        el.style.display = el.style.width = el.style.whiteSpace = el.style.overflow = el.style.verticalAlign = "";
       })(start);
     });
   }
