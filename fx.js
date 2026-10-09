@@ -7,6 +7,7 @@
  *   data-spotlight      a soft orange light follows the pointer inside it (SpotlightCard)
  *   data-scramble       its letters scramble, then settle, on hover (DecryptedText)
  *   .btn-star, .shiny   a light runs round the border / a shine sweeps the text (StarBorder, ShinyText: CSS only)
+ *   data-waitlist=URL   a TikTok-username form that joins the licence server's waitlist (data-source: where it was)
  *   page-wide           click sparks (ClickSpark), a springy cursor ring (mouse only), film grain
  * "Reduce motion" on: threads drawn once, words don't rotate, no sparks, no cursor ring, still grain. */
 (function () {
@@ -23,6 +24,7 @@
   each("[data-count-to]", countUp);
   each("[data-spotlight]", spotlight);
   each("[data-scramble]", scramble);
+  each("[data-waitlist]", waitlist);
   grain();
   if (!reduce) sparks();
   if (mouse && !reduce) cursorRing();
@@ -214,6 +216,30 @@
         el.textContent = text;
         el.style.display = el.style.width = el.style.whiteSpace = el.style.overflow = el.style.verticalAlign = "";
       })(start);
+    });
+  }
+
+  // ---------------------------------------------------------------------------------------------- waitlist
+  // "Get a TikTok message when Pro launches": posts the username to the licence server's /waitlist (CORS for footy1x.store
+  // only; a hidden website field catches bots). Same answers as the lock screen's waitlist.
+  function waitlist(form) {
+    var url = form.getAttribute("data-waitlist"), input = form.querySelector("input[name=tiktok]"), hp = form.querySelector("input[name=website]"),
+        msg = form.querySelector(".wl-msg"), btn = form.querySelector("button");
+    function say(t, ok) { msg.textContent = t || ""; msg.className = "wl-msg" + (ok ? " ok" : ""); }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!input.value.trim()) { say("Type your TikTok username first."); input.focus(); return; }
+      btn.disabled = true; say("Adding you…", true);
+      fetch(url, { method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ tiktok: input.value, source: form.getAttribute("data-source") || "site", website: hp ? hp.value : "" }) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { s: r.status, j: j }; }); })
+        .then(function (x) {
+          btn.disabled = false;
+          if (x.j && x.j.ok) { input.value = ""; say(x.j.already ? "@" + x.j.name + " is already on the list." : "Done, @" + x.j.name + ": footy1x will message you on TikTok when Pro launches.", true); return; }
+          if (x.s === 429) { say("Too many tries. Wait a few minutes."); return; }
+          say((x.j && x.j.message) || "Couldn't add you right now. Try again in a minute.");
+        })
+        .catch(function () { btn.disabled = false; say(navigator.onLine === false ? "You're offline: connect, then try again." : "The waitlist isn't open yet. Try again later."); });
     });
   }
 
