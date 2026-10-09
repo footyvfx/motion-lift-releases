@@ -5,12 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>footy1x store</title>
 <meta name="description" content="footy1x store: tools for video editors. Motion Lift Pro for After Effects, $3.">
+<meta name="theme-color" content="#1b1b1b">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://footy1x.store/">
+<meta property="og:title" content="footy1x store: tools for video editors">
+<meta property="og:description" content="Motion Lift for After Effects: copy a move's exact ease in one click. Free Lite version.">
+<meta property="og:image" content="https://footy1x.store/panel.png">
+<meta name="twitter:card" content="summary">
 <!-- The store front (footy1x.store, served by GitHub Pages from the motion-lift-releases repo; python3 extension/release.py
      site uploads this folder). One product for now: add a .card to .grid for each new one. Motion Lift's full page
      (install, licence, privacy, refunds) is motion-lift.html. "Buy" = the Lemon Squeezy checkout link while live
      (see reference/motion-lift-release-steps.md). Motion: motion.js (Lenis + GSAP), fx.js (the React Bits-style pieces),
      keyframe.js (the 3D keyframe, three.js), styles in fx.css; each file lists its hooks at the top. Without them, or with
-     "reduce motion" on, the page is the same, just still. -->
+     "reduce motion" on, the page is the same, just still.
+     When fx.css, motion.js, fx.js or keyframe.js changes, bump the ?v= on their links in both pages: GitHub Pages lets
+     browsers cache files for 10 minutes, and the new number makes them fetch the new file with the new page. -->
 <script>
   (function (d) {                       /* hide the hero until motion.js animates it in; show it anyway after 2.5 s */
     if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -18,7 +28,7 @@
     setTimeout(function () { if (!window.__motionReady) d.classList.remove("js-motion"); }, 2500);
   })(document.documentElement);
 </script>
-<link rel="stylesheet" href="fx.css">
+<link rel="stylesheet" href="fx.css?v=20261009e">
 <style>
   :root {
     --bg: #1b1b1b; --surface: #232323; --surface-2: #2b2b2b; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
@@ -36,7 +46,7 @@
   header nav { margin-left: auto; display: flex; gap: 20px; font-size: 14px; }
   header nav a { color: var(--text-2); text-decoration: none; }
   header nav a:hover { color: var(--text-1); }
-  .intro { display: grid; gap: 8px; padding: 24px 0 8px; align-items: center; }
+  .intro { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 24px 0 8px; align-items: center; }
   .intro h1 { font-size: clamp(36px, 9vw, 52px); line-height: 1.04; letter-spacing: -.035em; margin: 0 0 14px; }
   .intro h1 em { font-style: normal; color: var(--accent); display: block; }   /* the rotating words: always their own line */
   .intro p { color: var(--text-2); margin: 0; font-size: 17px; max-width: 30em; }
@@ -76,7 +86,7 @@
   .stat { background: var(--surface); border-radius: 14px; padding: 18px 20px; box-shadow: inset 0 0 0 1px var(--line); }
   .stat b { display: block; font-size: 40px; line-height: 1.1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .stat > span { display: block; margin-top: 4px; color: var(--text-3); font-size: 14px; line-height: 1.4; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding-bottom: 64px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding-bottom: 64px; }
   .card { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); display: flex; flex-direction: column; }
   .card .media { display: block; aspect-ratio: 4 / 3; background: #141414; overflow: hidden; border-bottom: 1px solid var(--line); }
   .card .media img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; transition: transform .4s ease; }
@@ -98,16 +108,9 @@
   .feats { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; font-size: 15px; color: var(--text-2); }
   .feats li { padding-left: 22px; position: relative; }
   .feats li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-  /* PC: text and keyframe side by side; the featured product becomes one wide card, the panel shown whole on the left */
-  @media (min-width: 860px) {
-    header { padding: 28px 0; }
-    .intro { grid-template-columns: 1.1fr .9fr; gap: 24px; padding: 8px 0 0; min-height: min(620px, calc(100vh - 110px)); }
-    .intro h1 { font-size: 64px; }
-    .intro p { font-size: 19px; }
-    .kf { aspect-ratio: 1 / 1; max-height: 540px; }
-    .stats { grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    .stat b { font-size: 52px; }
-    .grid { grid-template-columns: 1fr; padding-bottom: 88px; }
+  /* tablet and up: the featured product becomes one wide card, the panel shown whole on the left */
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
     .card.featured { flex-direction: row; min-height: 560px; }
     .card.featured .media { flex: 0 0 44%; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid var(--line); display: flex;
       align-items: center; justify-content: center; padding: 36px; background: radial-gradient(120% 90% at 50% 25%, #2a2a2a, #121212); }
@@ -121,6 +124,23 @@
     .card.featured .row { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
     .card.featured .price { font-size: 30px; }
     .card.featured .btn { height: 46px; padding: 0 24px; font-size: 16px; }
+  }
+  /* PC: text and keyframe side by side */
+  @media (min-width: 860px) {
+    header { padding: 28px 0; }
+    .intro { grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 24px; padding: 8px 0 0; min-height: min(620px, calc(100vh - 110px)); }
+    .intro h1 { font-size: 64px; }
+    .intro p { font-size: 19px; }
+    .kf { aspect-ratio: 1 / 1; max-height: 540px; }
+    .stats { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stat b { font-size: 52px; }
+    .grid { padding-bottom: 88px; }
+  }
+  @media (min-width: 860px) and (min-height: 900px) { .intro { min-height: min(760px, calc(100vh - 110px)); } }
+  @media (min-width: 700px) and (max-width: 859px) {
+    .card.featured .body { padding: 32px; }
+    .card.featured h2 { font-size: 30px; }
+    .card.featured .media { padding: 24px; }
   }
   @media (min-width: 1100px) { .intro h1 { font-size: 72px; } }
   footer { margin-top: auto; border-top: 1px solid var(--line); }
@@ -139,7 +159,7 @@
 
   <section class="intro">
     <div>
-      <a class="pill" href="motion-lift.html" data-hero><b>New</b><span class="shiny">Motion Lift 0.3: updates right in the panel</span></a>
+      <a class="pill" href="motion-lift.html" data-hero><b>New</b><span class="shiny">Motion Lift 0.3: in-panel updates</span></a>
       <h1 data-hero aria-label="Tools for video editors.">Tools for <em data-rotate="video editors.|motion design.|football edits.|After Effects.">video editors.</em></h1>
       <p data-hero>Made by footy1x for After Effects. Pay once, keep it.</p>
       <div class="cta" data-hero>
@@ -215,13 +235,13 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
-<script src="motion.js" defer></script>
-<script src="fx.js" defer></script>
+<script src="motion.js?v=20261009e" defer></script>
+<script src="fx.js?v=20261009e" defer></script>
 <script type="importmap">
 { "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
     "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.js": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js" } }
 </script>
-<script type="module" src="keyframe.js"></script>
+<script type="module" src="keyframe.js?v=20261009e"></script>
 </body>
 </html>
