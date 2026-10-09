@@ -171,7 +171,12 @@ function start(box) {
   function overKey(e) { toNdc(e); ray.setFromCamera(ndc, camera); return ray.intersectObject(proxy, false)[0]; }
   function used() { if (hint) hint.classList.add("gone"); }
 
+  // Grab: press on (or near) it, drag, let go anywhere. Letting go is caught every way there is, because a lost
+  // pointerup left it held and stretched (Callum's screen recording, 9 Oct 2026): the canvas's pointerup (pointer
+  // capture), any pointerup or pointercancel on the page, a lost capture, a move with no button down, the window losing
+  // focus or the tab hiding. A press while it's somehow still held lets go first.
   canvas.addEventListener("pointerdown", (e) => {
+    if (grabbing) release(e);
     const hit = overKey(e);
     if (!hit) return;
     used();
@@ -181,15 +186,20 @@ function start(box) {
     grabbing = true;
     down = { x: e.clientX, y: e.clientY };
     squashV -= 0.9;
-    canvas.setPointerCapture(e.pointerId);
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* the page-wide listeners below still catch the release */ }
     canvas.style.cursor = "grabbing";
   });
-  canvas.addEventListener("pointermove", (e) => {
-    if (!grabbing) {
-      if (e.pointerType === "mouse") canvas.style.cursor = overKey(e) ? "grab" : "";
-      return;
-    }
+  canvas.addEventListener("pointermove", (e) => {      // hover: a grab cursor over the keyframe (dragging is page-wide, below)
+    if (!grabbing && e.pointerType === "mouse") canvas.style.cursor = overKey(e) ? "grab" : "";
+  });
+  // a soft wall inside the canvas's edge: past 0.6 of the way out the pointer counts less and less, never beyond 0.85,
+  // so a long pull stretches it towards the edge without the canvas cutting it off
+  const wall = (v) => { const a = Math.abs(v); return a < 0.6 ? v : Math.sign(v) * (0.6 + 0.25 * Math.tanh((a - 0.6) / 0.25)); };
+  window.addEventListener("pointermove", (e) => {
+    if (!grabbing) return;
+    if (e.pointerType === "mouse" && e.buttons === 0) { release(e); return; }   // the button went up where we didn't hear it
     toNdc(e);
+    ndc.set(wall(ndc.x), wall(ndc.y));
     ray.setFromCamera(ndc, camera);
     if (!ray.ray.intersectPlane(plane, tmp)) return;
     const a = mesh.worldToLocal(tmp2.copy(hitW)), b = mesh.worldToLocal(tmp.clone());
@@ -201,7 +211,8 @@ function start(box) {
     if (!grabbing) return;
     grabbing = false;
     canvas.style.cursor = "grab";
-    const moved = down ? Math.hypot(e.clientX - down.x, e.clientY - down.y) : 99;
+    try { if (e && e.pointerId !== undefined && canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId); } catch (err) { /* already gone */ }
+    const moved = down && e && e.clientX !== undefined ? Math.hypot(e.clientX - down.x, e.clientY - down.y) : 99;
     if (moved < 6) {                           // a tap: Cmd-click in AE, Linear <-> Auto Bezier
       roundT = roundT ? 0 : 1;
       if (typeLabel) typeLabel.textContent = roundT ? "Auto Bezier" : "Linear";
@@ -215,8 +226,11 @@ function start(box) {
     pullT.set(0, 0, 0);
     down = null;
   }
-  canvas.addEventListener("pointerup", release);
-  canvas.addEventListener("pointercancel", release);
+  window.addEventListener("pointerup", release);
+  window.addEventListener("pointercancel", release);
+  canvas.addEventListener("lostpointercapture", release);
+  window.addEventListener("blur", () => release(null));
+  document.addEventListener("visibilitychange", () => { if (document.hidden) release(null); });
 
   if (matchMedia("(hover: hover) and (pointer: fine)").matches) {
     window.addEventListener("pointermove", (e) => {
@@ -250,7 +264,11 @@ function start(box) {
   resize();
 
   let lastY = window.scrollY, t = 0, idle = 0, then = performance.now(), running = false;
-  function frame() {
+  let failed = false;
+  function frame() {                         // three requests the next frame after this returns: an error must not escape
+    try { step(); } catch (err) { if (!failed) { failed = true; console.warn("keyframe frame:", err); } }
+  }
+  function step() {
     const now = performance.now(), dt = Math.min((now - then) / 1000, 1 / 30);
     then = now;
     t += dt;
