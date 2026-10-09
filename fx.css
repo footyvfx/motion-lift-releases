@@ -1,0 +1,65 @@
+/* footy1x.store: styles for motion.js, fx.js and the hooks they read (both pages link this). Page layout stays in each
+   page's own <style>; the accent colours come from its :root (--accent, --line-2, --text-2). */
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: clip; }
+
+/* hidden until motion.js animates it in (the head script adds .js-motion, and takes it off after 2.5 s regardless) */
+.js-motion [data-split], .js-motion [data-hero] { visibility: hidden; }
+.sl-mask { padding-bottom: .12em; margin-bottom: -.12em; }   /* SplitText's line masks: room for descenders */
+
+/* data-threads: ease curves on a graph-editor grid, the full window width behind the hero, faded top and bottom */
+[data-threads] { position: relative; isolation: isolate; }
+.threads { position: absolute; z-index: -1; top: -110px; height: calc(100% + 170px); left: 50%; width: 100vw; transform: translateX(-50%);
+  pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 70%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 70%, transparent); }
+
+/* data-rotate: words that take turns letter by letter */
+.rot { display: inline-block; position: relative; white-space: nowrap; clip-path: inset(-.1em -3em -.22em -.1em); }
+.rot-sizer { visibility: hidden; }
+.rot-word { position: absolute; left: 0; top: 0; white-space: nowrap; }
+.rot-ch { display: inline-block; }
+
+/* the "New" pill with a shine running across its text */
+.pill { display: inline-flex; align-items: center; gap: 10px; height: 32px; padding: 0 14px 0 4px; border-radius: 999px;
+  background: rgba(255,255,255,.035); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-2); font-size: 13px;
+  text-decoration: none; margin-bottom: 22px; max-width: 100%; }
+.pill b { display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 999px; background: var(--accent);
+  color: var(--accent-ink); font-size: 12px; font-weight: 700; }
+.pill .shiny { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.shiny { color: transparent; background: linear-gradient(105deg, var(--text-2) 42%, #fff 50%, var(--text-2) 58%) 0 0 / 300% 100% no-repeat;
+  -webkit-background-clip: text; background-clip: text; animation: shiny 3.6s linear infinite; }
+@keyframes shiny { from { background-position: 100% 0; } to { background-position: 0% 0; } }
+
+/* .btn-star: a light running round the button's border */
+@property --star-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.btn-star { position: relative; }
+.btn-star::after { content: ""; position: absolute; inset: -2px; padding: 2px; border-radius: 12px; pointer-events: none;
+  background: conic-gradient(from var(--star-a), transparent 0 60%, var(--star-c, rgba(255,255,255,.95)) 76%, transparent 88%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: star-spin 3s linear infinite; }
+.btn-ghost.btn-star { --star-c: var(--accent); }
+@keyframes star-spin { to { --star-a: 360deg; } }
+
+/* data-spotlight: a soft orange light that follows the pointer inside the card */
+[data-spotlight] { position: relative; }
+[data-spotlight]::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+  transition: opacity .4s ease; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(255,122,61,.09), transparent 62%); }
+[data-spotlight]:hover::after { opacity: 1; }
+
+/* page-wide: film grain, click sparks, the springy cursor ring (mouse only) */
+.grain { position: fixed; inset: -120px; z-index: 80; pointer-events: none; opacity: .045; background-size: 140px 140px;
+  animation: grain .9s steps(5) infinite; }
+@keyframes grain { 0% { transform: translate(0, 0); } 20% { transform: translate(-38px, 22px); } 40% { transform: translate(24px, -40px); }
+  60% { transform: translate(-16px, 46px); } 80% { transform: translate(44px, 10px); } 100% { transform: translate(0, 0); } }
+.sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 90; pointer-events: none; }
+.cursor-ring { position: fixed; left: 0; top: 0; z-index: 95; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.4); pointer-events: none; opacity: 0; display: grid; place-items: center;
+  transition: opacity .3s ease, width .3s ease, height .3s ease, margin .3s ease, border-color .3s ease, background-color .3s ease; }
+.cursor-ring.on { opacity: 1; }
+.cursor-ring.hot { width: 54px; height: 54px; margin: -27px 0 0 -27px; border-color: var(--accent); background-color: rgba(255,122,61,.08); }
+.cursor-ring span { font-size: 10px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) { .shiny, .btn-star::after, .grain { animation: none; } }
