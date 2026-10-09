@@ -98,7 +98,7 @@ function start(box) {
   camera.lookAt(0, 0, 0);
 
   const glowSprite = new THREE.Mesh(new THREE.PlaneGeometry(7, 7),
-    new THREE.MeshBasicMaterial({ map: softTexture([[0, "rgba(255,122,61,0.30)"], [0.28, "rgba(255,122,61,0.08)"], [0.62, "rgba(255,122,61,0)"]]),
+    new THREE.MeshBasicMaterial({ color: LABELS.orange.color, map: softTexture([[0, "rgba(255,255,255,0.30)"], [0.28, "rgba(255,255,255,0.08)"], [0.62, "rgba(255,255,255,0)"]]),
       transparent: true, depthWrite: false, toneMapped: false }));
   glowSprite.position.set(0, 0, -2.4);
   scene.add(glowSprite);
@@ -247,11 +247,12 @@ function start(box) {
   new ResizeObserver(resize).observe(box);
   resize();
 
-  let lastY = window.scrollY, t = 0, then = performance.now(), running = false;
+  let lastY = window.scrollY, t = 0, idle = 0, then = performance.now(), running = false;
   function frame() {
     const now = performance.now(), dt = Math.min((now - then) / 1000, 1 / 30);
     then = now;
     t += dt;
+    if (!grabbing) idle += dt;                 // the sway's clock pauses while it's held: no jump when you let go
     const y = window.scrollY, v = (y - lastY) / Math.max(dt, 1e-3);
     lastY = y;
 
@@ -277,7 +278,7 @@ function start(box) {
     bob.scale.set(1 + squash * 0.5, 1 - squash, 1 + squash * 0.5);
     if (!reduce) {
       bob.position.y = Math.sin(t * 1.15) * 0.07;
-      if (!grabbing) spin.rotation.set(0.1 + Math.sin(t * 0.37) * 0.08, Math.sin(t * 0.5) * 0.42, Math.sin(t * 0.29) * 0.04);
+      if (!grabbing) spin.rotation.set(0.1 + Math.sin(idle * 0.37) * 0.08, Math.sin(idle * 0.5) * 0.42, Math.sin(idle * 0.29) * 0.04);
     }
     look.x += (look.tx - look.x) * Math.min(1, dt * 4);
     look.y += (look.ty - look.y) * Math.min(1, dt * 4);
