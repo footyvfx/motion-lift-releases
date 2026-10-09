@@ -122,12 +122,18 @@
   }
 
   // ---------------------------------------------------------------------------------------------- scroll-played film
-  // The frame pins while the scroll plays the film (0.5 s in -> 0.1 s before the end over ~75 px of scroll per film
-  // second); each frame the video's time eases a fifth of the way to where the scroll is, and only when the last seek
-  // is done, so a fast flick never queues up seeks. The film loads when it's 800 px away, not before.
+  // The frame pins while the scroll plays the film: 0.5 s in to 0.1 s before the end over PX_PER_SEC of scroll per film
+  // second. It can't be raced through (Callum, 9 Oct 2026: "u can scroll way too fast"):
+  //   - the film never runs faster than MAX_RATE (1.5x): a flick sets where it should get to, and it gets there at that
+  //     speed. Forwards it really plays (playbackRate, smooth); backwards, or a small gap, it steps by seeking, also
+  //     capped. A browser that refuses play() (iOS Low Power Mode) gets the seeking all the way;
+  //   - while it's pinned the mouse wheel scrolls at WHEEL (0.6) of its speed (Lenis), back to 1 once it lets go.
+  // It loads when it's 800 px away, not before.
+  var PX_PER_SEC = 120, MAX_RATE = 1.5, WHEEL = 0.6;
   films.forEach(function (f) {
     if (!f || !ST) return;
-    var v = f.video, target = 0.5, seen = false, bar = f.sec.querySelector(".film-bar i"), hint = f.sec.querySelector(".film-hint");
+    var v = f.video, target = 0.5, seen = false, canPlay = true;
+    var bar = f.sec.querySelector(".film-bar i"), hint = f.sec.querySelector(".film-hint");
     function load() {
       if (seen) return;
       seen = true;
@@ -135,23 +141,33 @@
       v.load();
       v.addEventListener("loadedmetadata", function () {
         var p = v.play();                       // iOS shows seeked frames only after a play: start, stop at once
-        if (p && p.then) p.then(function () { v.pause(); }, function () {});
+        if (p && p.then) p.then(function () { v.pause(); }, function () { canPlay = false; });
         f.sec.classList.add("ready");
       }, { once: true });
     }
     ScrollTrigger.create({ trigger: f.sec, start: "top bottom+=800", onEnter: load });
-    ScrollTrigger.create({ trigger: f.frame, start: "center center", end: function () { return "+=" + Math.round(75 * (v.duration || 24)); },
+    ScrollTrigger.create({ trigger: f.frame, start: "center center", end: function () { return "+=" + Math.round(PX_PER_SEC * (v.duration || 24)); },
       pin: true, scrub: true, invalidateOnRefresh: true,
+      onToggle: function (self) { if (lenis && lenis.virtualScroll) lenis.virtualScroll.options.wheelMultiplier = self.isActive ? WHEEL : 1; },
       onUpdate: function (self) {
         if (v.duration) target = 0.5 + self.progress * (v.duration - 0.6);
         if (bar) bar.style.transform = "scaleX(" + self.progress.toFixed(4) + ")";
         if (hint && self.progress > 0.02) hint.classList.add("gone");
       } });
     v.addEventListener("loadedmetadata", function () { ScrollTrigger.refresh(); }, { once: true });
-    g.ticker.add(function () {
-      if (!v.duration || v.seeking || v.readyState < 1) return;
-      var d = target - v.currentTime;
-      if (Math.abs(d) > 0.02) v.currentTime = v.currentTime + d * 0.2;
+    g.ticker.add(function (time, deltaMs) {
+      if (!v.duration || v.readyState < 2) return;
+      var dt = Math.min((deltaMs || 16) / 1000, 0.05), d = target - v.currentTime;
+      if (canPlay && d > 0.12) {                 // ahead: play forwards, at most MAX_RATE, easing off as it nears the target
+        v.playbackRate = Math.max(0.6, Math.min(MAX_RATE, d * 1.5));
+        if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () { canPlay = false; }); }
+        return;
+      }
+      if (!v.paused) v.pause();
+      if (v.seeking || Math.abs(d) <= 0.02) return;
+      var step = d * 0.25, max = MAX_RATE * dt;   // behind, or a small gap: seek there, no faster than MAX_RATE either
+      if (Math.abs(step) > max) step = step > 0 ? max : -max;
+      v.currentTime = v.currentTime + step;
     });
   });
 
