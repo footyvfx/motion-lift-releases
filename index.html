@@ -8,7 +8,17 @@
 <!-- The store front (footy1x.store, served by GitHub Pages from the motion-lift-releases repo; python3 extension/release.py
      site uploads this folder). One product for now: add a .card to .grid for each new one. Motion Lift's full page
      (install, licence, privacy, refunds) is motion-lift.html. "Buy" = the Lemon Squeezy checkout link while live
-     (see reference/motion-lift-release-steps.md). -->
+     (see reference/motion-lift-release-steps.md). Motion: motion.js (Lenis + GSAP), fx.js (the React Bits-style pieces),
+     keyframe.js (the 3D keyframe, three.js), styles in fx.css; each file lists its hooks at the top. Without them, or with
+     "reduce motion" on, the page is the same, just still. -->
+<script>
+  (function (d) {                       /* hide the hero until motion.js animates it in; show it anyway after 2.5 s */
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    d.classList.add("js-motion");
+    setTimeout(function () { if (!window.__motionReady) d.classList.remove("js-motion"); }, 2500);
+  })(document.documentElement);
+</script>
+<link rel="stylesheet" href="fx.css">
 <style>
   :root {
     --bg: #1b1b1b; --surface: #232323; --surface-2: #2b2b2b; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
@@ -17,7 +27,7 @@
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--text-1); font: 16px/1.6 var(--font); min-height: 100vh; display: flex; flex-direction: column; }
+  body { margin: 0; background: var(--bg); color: var(--text-1); font: 16px/1.6 var(--font); min-height: 100vh; display: flex; flex-direction: column; overflow-x: clip; }
   a { color: var(--accent); text-underline-offset: 3px; }
   .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 24px; }
   header { display: flex; align-items: center; gap: 10px; padding: 22px 0; }
@@ -26,9 +36,44 @@
   header nav { margin-left: auto; display: flex; gap: 20px; font-size: 14px; }
   header nav a { color: var(--text-2); text-decoration: none; }
   header nav a:hover { color: var(--text-1); }
-  .intro { padding: 40px 0 28px; }
-  .intro h1 { font-size: clamp(30px, 4.5vw, 44px); line-height: 1.1; letter-spacing: -.025em; margin: 0 0 10px; }
-  .intro p { color: var(--text-2); margin: 0; font-size: 17px; }
+  .intro { display: grid; gap: 8px; padding: 24px 0 8px; align-items: center; }
+  .intro h1 { font-size: clamp(36px, 9vw, 52px); line-height: 1.04; letter-spacing: -.035em; margin: 0 0 14px; }
+  .intro h1 em { font-style: normal; color: var(--accent); display: block; }   /* the rotating words: always their own line */
+  .intro p { color: var(--text-2); margin: 0; font-size: 17px; max-width: 30em; }
+  .intro .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  /* the 3D keyframe (keyframe.js) on a transparent canvas; no WebGL = a flat CSS diamond */
+  .kf { position: relative; width: 100%; aspect-ratio: 1 / .82; max-height: 380px; margin: 0 auto; }
+  .kf canvas { width: 100%; height: 100%; display: block; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
+  .kf-hint, .kf-type, .labels { position: absolute; opacity: 0; transition: opacity .8s ease; }
+  .kf.ready .kf-hint, .kf.ready .kf-type, .kf.ready .labels { opacity: 1; }
+  .kf.ready .kf-hint.gone { opacity: 0; }
+  .kf-hint { left: 50%; bottom: 3%; transform: translateX(-50%); font-size: 13px; color: var(--text-3); pointer-events: none; white-space: nowrap; }
+  .kf-type { top: 5%; left: 2%; font-size: 12px; color: var(--text-3); pointer-events: none; }
+  .kf-type b { color: var(--text-1); font-weight: 600; }
+  .labels { top: 5%; right: 2%; display: flex; gap: 8px; }
+  .labels button { width: 18px; height: 18px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: var(--c);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px transparent; transition: box-shadow .2s ease, transform .2s ease; }
+  .labels button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--c); }
+  .labels button:hover { transform: scale(1.15); }
+  .kf.no-webgl canvas, .kf.no-webgl .kf-hint, .kf.no-webgl .kf-type, .kf.no-webgl .labels { display: none; }
+  .kf.no-webgl::before { content: ""; position: absolute; left: 50%; top: 50%; width: 34%; aspect-ratio: 1; border-radius: 16%;
+    transform: translate(-50%, -50%) rotate(45deg); background: linear-gradient(135deg, #ffc09b, #ff7a3d 50%, #c4410d);
+    box-shadow: 0 40px 60px -30px rgba(0,0,0,.7); }
+  /* scroll-speed marquee */
+  .marquee { overflow: hidden; padding: 28px 0 40px; display: grid; gap: 4px; user-select: none; }
+  .mq-track { display: flex; width: max-content; will-change: transform; }
+  .mq-track span { font-size: clamp(42px, 8vw, 92px); font-weight: 800; letter-spacing: -.035em; line-height: 1.04; white-space: nowrap; padding-right: .35em; }
+  .mq-track span i { font-style: normal; color: var(--accent); padding: 0 .3em; font-size: .6em; vertical-align: .18em; }
+  .mq-track.outline span { color: transparent; -webkit-text-stroke: 1.2px rgba(255,255,255,.3); }
+  .mq-track.outline span i { -webkit-text-stroke: 0; color: var(--text-3); }
+  /* the statement: words light up as you scroll; numbers count up */
+  .statement { padding: 24px 0 80px; }
+  .statement p { font-size: clamp(28px, 4.4vw, 54px); line-height: 1.12; letter-spacing: -.03em; font-weight: 700; margin: 0; max-width: 19em; }
+  .statement em { font-style: normal; color: var(--accent); }
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 44px; }
+  .stat { background: var(--surface); border-radius: 14px; padding: 18px 20px; box-shadow: inset 0 0 0 1px var(--line); }
+  .stat b { display: block; font-size: 40px; line-height: 1.1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .stat > span { display: block; margin-top: 4px; color: var(--text-3); font-size: 14px; line-height: 1.4; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding-bottom: 64px; }
   .card { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); display: flex; flex-direction: column; }
   .card .media { display: block; aspect-ratio: 4 / 3; background: #141414; overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -51,12 +96,15 @@
   .feats { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 6px; font-size: 15px; color: var(--text-2); }
   .feats li { padding-left: 22px; position: relative; }
   .feats li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-  /* PC: the featured product becomes one wide card, the panel shown whole on the left */
+  /* PC: text and keyframe side by side; the featured product becomes one wide card, the panel shown whole on the left */
   @media (min-width: 860px) {
     header { padding: 28px 0; }
-    .intro { padding: 48px 0 36px; }
-    .intro h1 { font-size: 56px; }
+    .intro { grid-template-columns: 1.1fr .9fr; gap: 24px; padding: 8px 0 0; min-height: min(620px, calc(100vh - 110px)); }
+    .intro h1 { font-size: 64px; }
     .intro p { font-size: 19px; }
+    .kf { aspect-ratio: 1 / 1; max-height: 540px; }
+    .stats { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stat b { font-size: 52px; }
     .grid { grid-template-columns: 1fr; padding-bottom: 88px; }
     .card.featured { flex-direction: row; min-height: 560px; }
     .card.featured .media { flex: 0 0 44%; aspect-ratio: auto; border-bottom: 0; border-right: 1px solid var(--line); display: flex;
@@ -72,39 +120,75 @@
     .card.featured .price { font-size: 30px; }
     .card.featured .btn { height: 46px; padding: 0 24px; font-size: 16px; }
   }
+  @media (min-width: 1100px) { .intro h1 { font-size: 72px; } }
   footer { margin-top: auto; border-top: 1px solid var(--line); }
   footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 22px; padding-top: 28px; padding-bottom: 40px; font-size: 14px; color: var(--text-3); }
   footer a { color: var(--text-2); text-decoration: none; }
   footer a:hover { color: var(--text-1); }
-  @media (max-width: 600px) { .wrap { padding: 0 16px; } header nav { gap: 14px; } .intro { padding-top: 20px; } }
+  @media (max-width: 600px) { .wrap { padding: 0 16px; } header nav { gap: 14px; } }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" data-threads>
   <header>
     <a class="logo" href="./">footy1x<span>.</span>store</a>
-    <nav><a href="#products">Products</a><a href="motion-lift.html#support">Support</a></nav>
+    <nav><a href="#products" data-scramble>Products</a><a href="motion-lift.html#support" data-scramble>Support</a></nav>
   </header>
 
   <section class="intro">
-    <h1>Tools for video editors.</h1>
-    <p>Made by footy1x for After Effects. Pay once, keep it.</p>
+    <div>
+      <a class="pill" href="motion-lift.html" data-hero><b>New</b><span class="shiny">Motion Lift 0.3: updates right in the panel</span></a>
+      <h1 data-hero aria-label="Tools for video editors.">Tools for <em data-rotate="video editors.|motion design.|football edits.|After Effects.">video editors.</em></h1>
+      <p data-hero>Made by footy1x for After Effects. Pay once, keep it.</p>
+      <div class="cta" data-hero>
+        <a class="btn btn-accent btn-star" href="#products">See Motion Lift</a>
+        <a class="btn btn-ghost" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free</a>
+      </div>
+    </div>
+    <div class="kf" data-keyframe>
+      <canvas role="img" aria-label="A glossy orange After Effects keyframe you can pull and tap; it springs back and wobbles"></canvas>
+      <span class="kf-type">Keyframe: <b data-kf-type>Linear</b></span>
+      <div class="labels" role="group" aria-label="Label colour">
+        <button type="button" data-label="orange" aria-pressed="true" aria-label="Orange" style="--c:#ff7a3d"></button>
+        <button type="button" data-label="cyan" aria-pressed="false" aria-label="Cyan" style="--c:#4fd0d4"></button>
+        <button type="button" data-label="fuchsia" aria-pressed="false" aria-label="Fuchsia" style="--c:#f673da"></button>
+      </div>
+      <span class="kf-hint">Pull the keyframe. Tap it for Auto Bezier.</span>
+    </div>
+  </section>
+</div>
+
+<!-- PRO-SOON: when Pro goes live, change "Pro coming soon" in the second row to "Pro $3" -->
+<div class="marquee" data-marquee aria-hidden="true">
+  <div class="mq-track"><span>Motion Lift<i>&#10022;</i>Exact eases<i>&#10022;</i>240 keys to 5<i>&#10022;</i>One click<i>&#10022;</i></span><span>Motion Lift<i>&#10022;</i>Exact eases<i>&#10022;</i>240 keys to 5<i>&#10022;</i>One click<i>&#10022;</i></span></div>
+  <div class="mq-track outline"><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span></div>
+</div>
+
+<div class="wrap">
+  <section class="statement" aria-label="What Motion Lift does">
+    <p data-scroll-words>The move you're copying already has the perfect ease. <em>Motion Lift copies it</em> into a few clean keyframes, in one click, and keeps the shake on its own control.</p>
+    <div class="stats" data-stagger>
+      <div class="stat" data-spotlight><b data-count-from="240" data-count-to="5">5</b><span>keyframes left from a 240-frame track</span></div>
+      <div class="stat" data-spotlight><b data-count-from="0" data-count-to="2">2</b><span>computers on one Pro licence</span></div>
+      <div class="stat" data-spotlight><b data-count-from="0" data-count-to="14">14</b><span>days Pro works offline</span></div>
+      <div class="stat" data-spotlight><b>$<span data-count-from="0" data-count-to="3">3</span></b><span>one-time for Pro, Lite is free</span></div>
+    </div>
   </section>
 
   <section id="products" class="grid" aria-label="Products">
-    <article class="card featured">
-      <a class="media" href="motion-lift.html"><img src="panel.png" width="520" height="860" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, the reference and lifted speed curves on top of each other"></a>
+    <article class="card featured" data-spotlight>
+      <a class="media" href="motion-lift.html"><img data-parallax src="panel.png" width="520" height="860" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, the reference and lifted speed curves on top of each other"></a>
       <div class="body">
         <span class="tag">After Effects extension</span>
-        <h2>Motion Lift Pro</h2>
-        <p>Turn a tracked move into a few clean keyframes with the exact eases, and keep the handheld shake on its own control.</p>
-        <ul class="feats">
+        <h2 data-split>Motion Lift Pro</h2>
+        <p data-reveal>Turn a tracked move into a few clean keyframes with the exact eases, and keep the handheld shake on its own control.</p>
+        <ul class="feats" data-stagger>
           <li>Lift every selected property in one click</li>
           <li>Preset library: save a lifted ease, apply it anywhere</li>
           <li>Copy any ease as CSS cubic-bezier()</li>
           <li>One licence, 2 computers, updates in the panel</li>
         </ul>
-        <div class="row">
+        <div class="row" data-reveal>
           <span class="price">$3 <small>one-time</small></span>
           <a class="btn btn-ghost" href="motion-lift.html">Details</a>
           <!-- PRO-SOON: Pro is hidden until Lemon Squeezy approves the store; the Buy button and its checkout link are in reference/motion-lift-release-steps.md (Status) -->
@@ -124,5 +208,18 @@
     <span>Payments by Lemon Squeezy. After Effects is a trademark of Adobe; not affiliated with Adobe.</span>
   </div>
 </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
+<script src="motion.js" defer></script>
+<script src="fx.js" defer></script>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
+    "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.js": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js" } }
+</script>
+<script type="module" src="keyframe.js"></script>
 </body>
 </html>
