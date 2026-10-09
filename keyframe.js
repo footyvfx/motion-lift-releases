@@ -144,7 +144,8 @@ function start(box) {
 
   const bob = new THREE.Group(), tilt = new THREE.Group(), spin = new THREE.Group();
   scene.add(bob); bob.add(tilt); tilt.add(spin);
-  const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1, 64), mat);
+  const light = matchMedia("(pointer: coarse)").matches || innerWidth < 700;    // phones: a lighter mesh, still smooth
+  const mesh = new THREE.Mesh(welded(new THREE.IcosahedronGeometry(1, light ? 40 : 64)), mat);
   mesh.frustumCulled = false;                   // the vertex shader moves it outside its unit-sphere bounds
   const proxy = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshBasicMaterial({ visible: false }));
   proxy.scale.set(1.25, 1.25, 0.6);
@@ -301,6 +302,23 @@ function start(box) {
   document.addEventListener("visibilitychange", () => run(inView && !document.hidden));
   run(true);
   box.classList.add("ready");
+}
+
+function welded(geo) {                         // three's icosphere repeats every corner (6 copies): share them, ~6x less shading
+  const pos = geo.getAttribute("position"), seen = new Map(), verts = [], index = [];
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+    const key = Math.round(x * 1e5) + "," + Math.round(y * 1e5) + "," + Math.round(z * 1e5);
+    let j = seen.get(key);
+    if (j === undefined) { j = verts.length / 3; seen.set(key, j); verts.push(x, y, z); }
+    index.push(j);
+  }
+  geo.dispose();
+  const out = new THREE.BufferGeometry();
+  out.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
+  out.setAttribute("normal", new THREE.Float32BufferAttribute(verts.slice(), 3));   // the shader makes its own normals
+  out.setIndex(index);
+  return out;
 }
 
 function studio() {                            // the environment it reflects: soft boxes in a dark room
