@@ -5,11 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Motion Lift Pro · footy1x</title>
 <meta name="description" content="Motion Lift turns a dense After Effects track into a few clean keyframes with the exact eases. Free Lite version; Pro is $3.">
+<meta name="theme-color" content="#1b1b1b">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://footy1x.store/motion-lift.html">
+<meta property="og:title" content="Motion Lift: copy a move's exact ease in one click">
+<meta property="og:description" content="An After Effects panel that turns a tracked move into a few clean keyframes with the same ease. Free Lite version.">
+<meta property="og:image" content="https://footy1x.store/panel.png">
+<meta name="twitter:card" content="summary">
 <!-- Motion Lift's details page (the store front is index.html). Hosted free on GitHub Pages from the
      motion-lift-releases repo (index.html + panel.png at the repo root; python3 extension/release.py site uploads them).
      "Get Pro" = the Lemon Squeezy checkout link (see reference/motion-lift-release-steps.md). Motion: motion.js
      (Lenis + GSAP), including the #lift chart, and fx.js (the React Bits-style pieces), styles in fx.css; each file lists
-     its hooks at the top. Without them, or with "reduce motion" on, the page is the same, just still. -->
+     its hooks at the top. Without them, or with "reduce motion" on, the page is the same, just still.
+     When fx.css, motion.js, fx.js or keyframe.js changes, bump the ?v= on their links in both pages: GitHub Pages lets
+     browsers cache files for 10 minutes, and the new number makes them fetch the new file with the new page. -->
 <script>
   (function (d) {                       /* hide the hero until motion.js animates it in; show it anyway after 2.5 s */
     if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -17,7 +27,7 @@
     setTimeout(function () { if (!window.__motionReady) d.classList.remove("js-motion"); }, 2500);
   })(document.documentElement);
 </script>
-<link rel="stylesheet" href="fx.css">
+<link rel="stylesheet" href="fx.css?v=20261009e">
 <style>
   :root {
     --bg: #1b1b1b; --surface: #232323; --surface-2: #2b2b2b; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
@@ -219,7 +229,7 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
-<script src="motion.js" defer></script>
-<script src="fx.js" defer></script>
+<script src="motion.js?v=20261009e" defer></script>
+<script src="fx.js?v=20261009e" defer></script>
 </body>
 </html>
