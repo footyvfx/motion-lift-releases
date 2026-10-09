@@ -53,6 +53,8 @@
     function draw(time) {
       var t = time / 1000;
       px += (tx - px) * 0.05; py += (ty - py) * 0.05;
+      var tall = h > w * 1.15, b0 = tall ? 0.58 : 0, span = 1 - b0, dim = w < 600 ? 0.75 : 1;   // phones: lower band, softer
+      function Y(v) { return h * (b0 + span * v); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       ctx.beginPath();                        // the graph editor's grid
@@ -64,13 +66,13 @@
       for (var i = 0; i < LINES; i++) {       // ease curves from low-left to high-right, each easing a bit differently
         var f = i / (LINES - 1), ph = i * 1.7, top = i === LINES - 1;
         var x0 = top ? w * 0.04 : -w * 0.02, x3 = top ? w * 0.96 : w * 1.02;
-        var y0 = h * (0.84 - 0.1 * f + 0.04 * Math.sin(t * 0.31 + ph));
-        var y3 = h * (0.2 + 0.08 * f + 0.04 * Math.cos(t * 0.27 + ph));
+        var y0 = Y((top ? 0.93 : 0.84 - 0.1 * f) + 0.04 * Math.sin(t * 0.31 + ph));   // the handled curve starts low, under the buttons
+        var y3 = Y((top ? 0.13 : 0.2 + 0.08 * f) + 0.04 * Math.cos(t * 0.27 + ph));
         var e1 = 0.3 + 0.3 * f + 0.06 * Math.sin(t * 0.43 + ph) + (px - 0.5) * 0.12;
         var e2 = 0.3 + 0.24 * (1 - f) + 0.06 * Math.cos(t * 0.37 + ph) - (px - 0.5) * 0.12;
-        var bend = (py - 0.5) * h * 0.22 * (0.4 + f);
+        var bend = (py - 0.5) * h * span * 0.22 * (0.4 + f);
         var x1 = x0 + (x3 - x0) * e1, y1 = y0 + bend, x2 = x3 - (x3 - x0) * e2, y2 = y3 + bend;
-        var grad = ctx.createLinearGradient(x0, 0, x3, 0), a = top ? 0.34 : 0.05 + 0.13 * f;
+        var grad = ctx.createLinearGradient(x0, 0, x3, 0), a = (top ? 0.34 : 0.05 + 0.13 * f) * dim;
         grad.addColorStop(0, "rgba(255,122,61," + (top ? a : 0) + ")");
         grad.addColorStop(0.5, "rgba(255,122,61," + a + ")");
         grad.addColorStop(1, "rgba(255,122,61," + (top ? a : 0) + ")");
