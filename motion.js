@@ -123,7 +123,7 @@
   // ---------------------------------------------------------------------------------------------- chart builder
   function buildLift() {
     var svg = document.querySelector("[data-lift]");
-    if (!svg) return null;
+    if (!svg || !svg.closest(".lift-fig")) return null;   // the chart needs its figure (count + tag); no figure, no chart
     var NS = "http://www.w3.org/2000/svg", N = 240, X0 = 40, X1 = 960, Y0 = 290, H = 220, SY = 338;
     var fig = svg.closest(".lift-fig"), section = svg.closest("section");
     var count = fig.querySelector("[data-lift-count]"), tag = fig.querySelector("[data-lift-tag]");
