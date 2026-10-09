@@ -8,7 +8,9 @@
  *   data-stagger  its children fade up one after another   data-parallax  drifts against the scroll (wide screens)
  *   data-marquee  rows of .mq-track that slide, faster and skewed while you scroll
  *   data-tilt     tilts towards the pointer                 .btn  magnetic (mouse only)
- *   data-lift     the chart's <svg> (inside figure.lift-fig[hidden]) */
+ *   data-lift     the chart's <svg> (inside figure.lift-fig[hidden])
+ *   data-film     a section whose <video> plays as you scroll (data-wide / data-tall: the 16:9 and 9:16 films; tall
+ *                 screens get the tall one). Without GSAP or with "reduce motion": the same video with play controls. */
 (function () {
   "use strict";
   var root = document.documentElement;
@@ -16,6 +18,7 @@
   var mouse = window.matchMedia && matchMedia("(hover: hover) and (pointer: fine)").matches;
   var g = window.gsap;
   var lift = buildLift();                      // drawn in its final state; animated below when GSAP is here
+  var films = Array.prototype.map.call(document.querySelectorAll("[data-film]"), pickFilm);
 
   function ready() { root.classList.remove("js-motion"); window.__motionReady = true; }
   if (!g || reduce) { ready(); return; }
@@ -118,7 +121,55 @@
     });
   }
 
+  // ---------------------------------------------------------------------------------------------- scroll-played film
+  // The frame pins while the scroll plays the film (0.5 s in -> 0.1 s before the end over ~75 px of scroll per film
+  // second); each frame the video's time eases a fifth of the way to where the scroll is, and only when the last seek
+  // is done, so a fast flick never queues up seeks. The film loads when it's 800 px away, not before.
+  films.forEach(function (f) {
+    if (!f || !ST) return;
+    var v = f.video, target = 0.5, seen = false, bar = f.sec.querySelector(".film-bar i"), hint = f.sec.querySelector(".film-hint");
+    function load() {
+      if (seen) return;
+      seen = true;
+      v.preload = "auto";
+      v.load();
+      v.addEventListener("loadedmetadata", function () {
+        var p = v.play();                       // iOS shows seeked frames only after a play: start, stop at once
+        if (p && p.then) p.then(function () { v.pause(); }, function () {});
+        f.sec.classList.add("ready");
+      }, { once: true });
+    }
+    ScrollTrigger.create({ trigger: f.sec, start: "top bottom+=800", onEnter: load });
+    ScrollTrigger.create({ trigger: f.frame, start: "center center", end: function () { return "+=" + Math.round(75 * (v.duration || 24)); },
+      pin: true, scrub: true, invalidateOnRefresh: true,
+      onUpdate: function (self) {
+        if (v.duration) target = 0.5 + self.progress * (v.duration - 0.6);
+        if (bar) bar.style.transform = "scaleX(" + self.progress.toFixed(4) + ")";
+        if (hint && self.progress > 0.02) hint.classList.add("gone");
+      } });
+    v.addEventListener("loadedmetadata", function () { ScrollTrigger.refresh(); }, { once: true });
+    g.ticker.add(function () {
+      if (!v.duration || v.seeking || v.readyState < 1) return;
+      var d = target - v.currentTime;
+      if (Math.abs(d) > 0.02) v.currentTime = v.currentTime + d * 0.2;
+    });
+  });
+
   ready();
+
+  // ---------------------------------------------------------------------------------------------- film picker
+  // the film for this screen (portrait screens: the 9:16 one); without GSAP or with "reduce motion" it gets controls
+  function pickFilm(sec) {
+    var v = sec.querySelector("video"), frame = sec.querySelector(".film-frame");
+    if (!v || !frame) return null;
+    var tall = window.matchMedia ? matchMedia("(max-aspect-ratio: 4/5)").matches : false;
+    sec.classList.add(tall ? "is-tall" : "is-wide");
+    v.muted = true;
+    v.poster = sec.getAttribute(tall ? "data-tall-poster" : "data-wide-poster") || "";
+    v.src = sec.getAttribute(tall ? "data-tall" : "data-wide") || "";
+    if (!window.gsap || !window.ScrollTrigger || reduce) { v.controls = true; v.preload = "metadata"; sec.classList.add("ready", "still"); return null; }
+    return { sec: sec, video: v, frame: frame };
+  }
 
   // ---------------------------------------------------------------------------------------------- chart builder
   function buildLift() {
