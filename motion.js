@@ -113,7 +113,7 @@
       var wide = ctx.conditions.wide;
       g.to(st, { p: 1, ease: "none", onUpdate: function () { lift.draw(st.p); },
         scrollTrigger: wide
-          ? { trigger: lift.section, start: "center center", end: "+=1100", pin: true, scrub: 0.8 }
+          ? { trigger: lift.fig, start: "center center", end: "+=1000", pin: true, scrub: 0.8 }   // the figure fits any laptop screen
           : { trigger: lift.fig, start: "top 80%", end: "bottom 30%", scrub: 0.8 } });
     });
   }
