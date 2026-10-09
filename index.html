@@ -64,8 +64,8 @@
   .mq-track { display: flex; width: max-content; will-change: transform; }
   .mq-track span { font-size: clamp(42px, 8vw, 92px); font-weight: 800; letter-spacing: -.035em; line-height: 1.04; white-space: nowrap; padding-right: .35em; }
   .mq-track span i { font-style: normal; color: var(--accent); padding: 0 .3em; font-size: .6em; vertical-align: .18em; }
-  .mq-track.outline span { color: transparent; -webkit-text-stroke: 1.2px rgba(255,255,255,.3); }
-  .mq-track.outline span i { -webkit-text-stroke: 0; color: var(--text-3); }
+  .mq-track.dim span { color: rgba(255,255,255,.2); }   /* not an outline: -webkit-text-stroke draws SF's overlapping inner contours as stray lines */
+  .mq-track.dim span i { color: var(--text-3); }
   /* the statement: words light up as you scroll; numbers count up */
   .statement { padding: 24px 0 80px; }
   .statement p { font-size: clamp(28px, 4.4vw, 54px); line-height: 1.12; letter-spacing: -.03em; font-weight: 700; margin: 0; max-width: 19em; }
@@ -161,7 +161,7 @@
 <!-- PRO-SOON: when Pro goes live, change "Pro coming soon" in the second row to "Pro $3" -->
 <div class="marquee" data-marquee aria-hidden="true">
   <div class="mq-track"><span>Motion Lift<i>&#10022;</i>Exact eases<i>&#10022;</i>240 keys to 5<i>&#10022;</i>One click<i>&#10022;</i></span><span>Motion Lift<i>&#10022;</i>Exact eases<i>&#10022;</i>240 keys to 5<i>&#10022;</i>One click<i>&#10022;</i></span></div>
-  <div class="mq-track outline"><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span></div>
+  <div class="mq-track dim"><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span></div>
 </div>
 
 <div class="wrap">
