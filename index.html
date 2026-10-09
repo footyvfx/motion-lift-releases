@@ -28,7 +28,7 @@
     setTimeout(function () { if (!window.__motionReady) d.classList.remove("js-motion"); }, 2500);
   })(document.documentElement);
 </script>
-<link rel="stylesheet" href="fx.css?v=20261009f">
+<link rel="stylesheet" href="fx.css?v=20261009h">
 <style>
   :root {
     --bg: #1b1b1b; --surface: #232323; --surface-2: #2b2b2b; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
@@ -60,11 +60,13 @@
   .kf-hint { left: 50%; bottom: 3%; transform: translateX(-50%); font-size: 13px; color: var(--text-3); pointer-events: none; white-space: nowrap; }
   .kf-type { top: 5%; left: 2%; font-size: 12px; color: var(--text-3); pointer-events: none; }
   .kf-type b { color: var(--text-1); font-weight: 600; }
-  .labels { top: 5%; right: 2%; display: flex; gap: 8px; }
-  .labels button { width: 18px; height: 18px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: var(--c);
+  .labels { top: 4%; right: 0; display: flex; gap: 4px; }
+  /* 24 px dots inside 36 px buttons: easy to hit with a thumb */
+  .labels button { position: relative; width: 36px; height: 36px; border: 0; padding: 0; cursor: pointer; background: none; border-radius: 50%; }
+  .labels button::before { content: ""; position: absolute; inset: 6px; border-radius: 50%; background: var(--c);
     box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px transparent; transition: box-shadow .2s ease, transform .2s ease; }
-  .labels button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--c); }
-  .labels button:hover { transform: scale(1.15); }
+  .labels button[aria-pressed="true"]::before { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--c); }
+  .labels button:hover::before { transform: scale(1.12); }
   .kf.no-webgl canvas, .kf.no-webgl .kf-hint, .kf.no-webgl .kf-type, .kf.no-webgl .labels { display: none; }
   .kf.no-webgl::before { content: ""; position: absolute; left: 50%; top: 50%; width: 34%; aspect-ratio: 1; border-radius: 16%;
     transform: translate(-50%, -50%) rotate(45deg); background: linear-gradient(135deg, #ffc09b, #ff7a3d 50%, #c4410d);
@@ -86,6 +88,19 @@
   .stat { background: var(--surface); border-radius: 14px; padding: 18px 20px; box-shadow: inset 0 0 0 1px var(--line); }
   .stat b { display: block; font-size: 40px; line-height: 1.1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .stat > span { display: block; margin-top: 4px; color: var(--text-3); font-size: 14px; line-height: 1.4; }
+  /* the film: your explainer, played by the scroll (motion.js data-film); 16:9 on wide screens, 9:16 on tall ones */
+  .film { padding: 8px 0 88px; }
+  .film h2 { font-size: clamp(28px, 4.4vw, 48px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 10px; }
+  .film > p { color: var(--text-2); margin: 0 0 28px; font-size: 17px; max-width: 34em; }
+  .film-frame { position: relative; width: min(100%, calc(80vh * 16 / 9)); aspect-ratio: 16 / 9; margin: 0 auto; border-radius: 16px;
+    overflow: hidden; background: #141414; box-shadow: inset 0 0 0 1px var(--line), 0 30px 80px rgba(0,0,0,.45); }
+  .film.is-tall .film-frame { width: min(100%, calc(76vh * 9 / 16)); aspect-ratio: 9 / 16; }
+  .film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #141414; }
+  .film-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.08); pointer-events: none; }
+  .film-bar i { display: block; height: 100%; background: var(--accent); transform-origin: left center; transform: scaleX(0); }
+  .film-hint { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); font-size: 12px; color: var(--text-1); white-space: nowrap;
+    background: rgba(0,0,0,.55); padding: 5px 12px; border-radius: 999px; pointer-events: none; transition: opacity .5s ease; }
+  .film-hint.gone, .film.still .film-hint, .film.still .film-bar { opacity: 0; }
   .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; padding-bottom: 64px; }
   .card { background: var(--surface); border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); display: flex; flex-direction: column; }
   .card .media { display: block; aspect-ratio: 4 / 3; background: #141414; overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -159,7 +174,7 @@
 
   <section class="intro">
     <div>
-      <a class="pill" href="motion-lift.html" data-hero><b>New</b><span class="shiny">Motion Lift 0.3: in-panel updates</span></a>
+      <a class="pill" href="motion-lift.html" data-hero><b>New</b><span class="shiny">Motion Lift 0.4: now on Windows</span></a>
       <h1 data-hero aria-label="Tools for video editors.">Tools for <em data-rotate="video editors.|motion design.|football edits.|After Effects.">video editors.</em></h1>
       <p data-hero>Made by footy1x for After Effects. Pay once, keep it.</p>
       <div class="cta" data-hero>
@@ -183,7 +198,7 @@
 <!-- PRO-SOON: when Pro goes live, change "Pro coming soon" in the second row to "Pro $3" -->
 <div class="marquee" data-marquee aria-hidden="true">
   <div class="mq-track"><span>Motion Lift<i>&#10022;</i>Exact eases<i>&#10022;</i>240 keys to 5<i>&#10022;</i>One click<i>&#10022;</i></span><span>Motion Lift<i>&#10022;</i>Exact eases<i>&#10022;</i>240 keys to 5<i>&#10022;</i>One click<i>&#10022;</i></span></div>
-  <div class="mq-track outline"><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span><span>After Effects<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span></div>
+  <div class="mq-track outline"><span>After Effects<i>&#10022;</i>Mac + Windows<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span><span>After Effects<i>&#10022;</i>Mac + Windows<i>&#10022;</i>Free Lite version<i>&#10022;</i>Pro coming soon<i>&#10022;</i></span></div>
 </div>
 
 <div class="wrap">
@@ -194,6 +209,17 @@
       <div class="stat" data-spotlight><b data-count-from="0" data-count-to="2">2</b><span>computers on one Pro licence</span></div>
       <div class="stat" data-spotlight><b data-count-from="0" data-count-to="14">14</b><span>days Pro works offline</span></div>
       <div class="stat" data-spotlight><b>$<span data-count-from="0" data-count-to="3">3</span></b><span>one-time for Pro, Lite is free</span></div>
+    </div>
+  </section>
+
+  <section class="film" data-film data-wide="lift-film-wide.mp4" data-wide-poster="lift-film-wide.jpg" data-tall="lift-film-tall.mp4"
+           data-tall-poster="lift-film-tall.jpg" aria-label="Motion Lift in action">
+    <h2 data-split>Scroll to watch a lift.</h2>
+    <p data-reveal>The real panel, start to finish: a shaky track goes in, a few clean keys come out.</p>
+    <div class="film-frame">
+      <video muted playsinline preload="none" aria-label="Motion Lift's explainer: a tracked move becomes a few clean keyframes"></video>
+      <span class="film-hint">Keep scrolling</span>
+      <div class="film-bar"><i></i></div>
     </div>
   </section>
 
@@ -216,7 +242,7 @@
           <!-- PRO-SOON: Pro is hidden until Lemon Squeezy approves the store; the Buy button and its checkout link are in reference/motion-lift-release-steps.md (Status) -->
           <span class="btn btn-soon" aria-disabled="true">Pro: coming in a few days</span>
         </div>
-        <span class="free">Free Lite version: <a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">download the installer</a> (macOS, After Effects 2022+).</span>
+        <span class="free">Free Lite version: <a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">download the installer</a> (Mac and Windows, After Effects 2022+).</span>
       </div>
     </article>
   </section>
@@ -235,13 +261,13 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
-<script src="motion.js?v=20261009f" defer></script>
-<script src="fx.js?v=20261009f" defer></script>
+<script src="motion.js?v=20261009h" defer></script>
+<script src="fx.js?v=20261009h" defer></script>
 <script type="importmap">
 { "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.min.js",
     "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.js": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.core.min.js" } }
 </script>
-<script type="module" src="keyframe.js?v=20261009f"></script>
+<script type="module" src="keyframe.js?v=20261009h"></script>
 </body>
 </html>
