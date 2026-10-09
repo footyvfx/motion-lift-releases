@@ -7,7 +7,17 @@
 <meta name="description" content="Motion Lift turns a dense After Effects track into a few clean keyframes with the exact eases. Free Lite version; Pro is $3.">
 <!-- Motion Lift's details page (the store front is index.html). Hosted free on GitHub Pages from the
      motion-lift-releases repo (index.html + panel.png at the repo root; python3 extension/release.py site uploads them).
-     "Get Pro" = the Lemon Squeezy checkout link (see reference/motion-lift-release-steps.md). -->
+     "Get Pro" = the Lemon Squeezy checkout link (see reference/motion-lift-release-steps.md). Motion: motion.js
+     (Lenis + GSAP), including the #lift chart, and fx.js (the React Bits-style pieces), styles in fx.css; each file lists
+     its hooks at the top. Without them, or with "reduce motion" on, the page is the same, just still. -->
+<script>
+  (function (d) {                       /* hide the hero until motion.js animates it in; show it anyway after 2.5 s */
+    if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    d.classList.add("js-motion");
+    setTimeout(function () { if (!window.__motionReady) d.classList.remove("js-motion"); }, 2500);
+  })(document.documentElement);
+</script>
+<link rel="stylesheet" href="fx.css">
 <style>
   :root {
     --bg: #1b1b1b; --surface: #232323; --surface-2: #2b2b2b; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
@@ -16,7 +26,7 @@
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--text-1); font: 16px/1.6 var(--font); }
+  body { margin: 0; background: var(--bg); color: var(--text-1); font: 16px/1.6 var(--font); overflow-x: clip; }
   a { color: var(--accent); text-underline-offset: 3px; }
   .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
   header.top { display: flex; align-items: center; gap: 10px; padding: 22px 0; }
@@ -38,7 +48,19 @@
   .btn-ghost:hover { background: var(--surface-2); }
   .btn-soon { color: var(--text-2); box-shadow: inset 0 0 0 1px var(--line-2); cursor: default; font-weight: 500; }
   .fine { font-size: 13px; color: var(--text-3); margin-top: 12px; }
-  .shot { justify-self: center; width: 100%; max-width: 360px; border-radius: 14px; box-shadow: 0 0 0 1px var(--line-2), 0 30px 80px rgba(0,0,0,.45); }
+  .shot-wrap { justify-self: center; width: 100%; max-width: 360px; }
+  .shot { display: block; width: 100%; height: auto; border-radius: 14px; box-shadow: 0 0 0 1px var(--line-2), 0 30px 80px rgba(0,0,0,.45); }
+  /* the lift chart (built and animated by motion.js) */
+  .lift-fig { margin: 8px 0 0; background: var(--surface); border-radius: 16px; box-shadow: inset 0 0 0 1px var(--line); padding: 18px 18px 6px; }
+  .lift-meta { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; font-size: 14px; color: var(--text-3); }
+  .lift-meta b { color: var(--text-1); font-size: 34px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin-right: 6px; }
+  .lift-fig svg { display: block; width: 100%; height: auto; margin-top: 6px; overflow: visible; }
+  .lift-grid { stroke: rgba(255,255,255,.06); stroke-width: 1; }
+  .lift-dots circle { fill: #9a9a9a; }
+  .lift-curve { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+  .lift-shake { fill: none; stroke: #6f6f6f; stroke-width: 1.5; stroke-linejoin: round; }
+  .lift-key { fill: var(--accent); stroke: var(--bg); stroke-width: 2.5; }
+  .lift-label { fill: var(--text-3); font: 13px var(--font); }
   section { padding: 56px 0; border-top: 1px solid var(--line); }
   h2 { font-size: 26px; letter-spacing: -.015em; margin: 0 0 20px; }
   h3 { font-size: 17px; margin: 0 0 6px; }
@@ -73,38 +95,48 @@
   <header class="top">
     <svg class="mark" viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(255,255,255,.14)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg>
     <div class="brand"><a href="./" style="color:inherit;text-decoration:none">footy1x</a> <span>/ Motion Lift</span></div>
-    <nav><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#licence">Licence</a><a href="#support">Support</a></nav>
+    <nav><a href="#lift" data-scramble>The lift</a><a href="#how" data-scramble>How it works</a><a href="#pricing" data-scramble>Pricing</a><a href="#licence" data-scramble>Licence</a><a href="#support" data-scramble>Support</a></nav>
   </header>
 
-  <div class="hero">
+  <div class="hero" data-threads>
     <div>
-      <h1>Copy a move's <em>exact ease</em> in one click.</h1>
-      <p class="lede">Track the move in your reference, select the tracked property, click Lift. Motion Lift replaces hundreds of tracked
+      <h1 data-split="hero">Copy a move's <em>exact ease</em> in one click.</h1>
+      <p class="lede" data-hero>Track the move in your reference, select the tracked property, click Lift. Motion Lift replaces hundreds of tracked
         keyframes with a few clean ones whose speed curve matches the original, and keeps the handheld shake on a separate control.</p>
-      <div class="cta">
+      <div class="cta" data-hero>
         <!-- PRO-SOON: Pro is hidden until Lemon Squeezy approves the store; the Buy button and its checkout link are in reference/motion-lift-release-steps.md (Status) -->
-        <a class="btn btn-accent" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free (Lite)</a>
+        <a class="btn btn-accent btn-star" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free (Lite)</a>
         <span class="btn btn-soon" aria-disabled="true">Pro ($3): coming in a few days</span>
       </div>
-      <p class="fine">One download for everyone: it runs as Lite until you enter a Pro key. After Effects 2022 or later, macOS.</p>
+      <p class="fine" data-hero>One download for everyone: it runs as Lite until you enter a Pro key. After Effects 2022 or later, macOS.</p>
     </div>
-    <img class="shot" src="panel.png" width="520" height="860" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with the reference and lifted speed curves on top of each other">
+    <div class="shot-wrap"><img class="shot" data-tilt src="panel.png" width="520" height="860" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with the reference and lifted speed curves on top of each other"></div>
   </div>
 
+  <section id="lift">
+    <h2 data-split>A shaky track in. A few clean keys out.</h2>
+    <p class="lede" data-reveal>Each grey dot is a tracked key, one per frame, wobbling like the hand that held the camera. Lift fits Bezier
+      eases to the move's speed and gives you 5 keys that move like the reference. The shake isn't lost: it goes on its own control.</p>
+    <figure class="lift-fig" data-spotlight hidden>
+      <div class="lift-meta"><span><b data-lift-count>5</b>keys</span><span data-lift-tag>Lifted: 5 keys, exact eases</span></div>
+      <svg viewBox="0 0 1000 370" data-lift role="img" aria-label="A shaky tracked curve of 240 keys turns into a smooth orange curve with 5 keyframes; the shake moves to a separate line below"></svg>
+    </figure>
+  </section>
+
   <section id="how">
-    <h2>How it works</h2>
-    <div class="steps">
-      <div class="step"><h3>Track the move</h3><p>With After Effects' own tracker, Mocha AE or Motion Sketch, so the property has a key on every frame.</p></div>
-      <div class="step"><h3>Click Lift</h3><p>Motion Lift finds where each move starts and stops and fits Bezier eases to the reference's speed. One undo step.</p></div>
-      <div class="step"><h3>Edit like your own keys</h3><p>You get a few ordinary keyframes. The shake goes on an "ML Shake" effect, switched off, to keep or delete.</p></div>
+    <h2 data-split>How it works</h2>
+    <div class="steps" data-stagger>
+      <div class="step" data-spotlight><h3>Track the move</h3><p>With After Effects' own tracker, Mocha AE or Motion Sketch, so the property has a key on every frame.</p></div>
+      <div class="step" data-spotlight><h3>Click Lift</h3><p>Motion Lift finds where each move starts and stops and fits Bezier eases to the reference's speed. One undo step.</p></div>
+      <div class="step" data-spotlight><h3>Edit like your own keys</h3><p>You get a few ordinary keyframes. The shake goes on an "ML Shake" effect, switched off, to keep or delete.</p></div>
     </div>
   </section>
 
   <section id="pricing">
-    <h2>Lite and Pro</h2>
+    <h2 data-split>Lite and Pro</h2>
     <table>
       <thead><tr><th></th><th>Lite <span class="fine">free</span></th><th>Pro <span class="price">$3</span> <span class="fine">one-time</span></th></tr></thead>
-      <tbody>
+      <tbody data-stagger>
         <tr><td>Lift a tracked move into a few eased keys</td><td>One property at a time</td><td class="yes">Every selected property at once</td></tr>
         <tr><td>Speed / value graph, error and peak speed</td><td>Yes</td><td>Yes</td></tr>
         <tr><td>Shake split onto its own effect</td><td>Yes</td><td>Yes</td></tr>
@@ -118,8 +150,8 @@
   </section>
 
   <section id="install">
-    <h2>Install</h2>
-    <div class="cols">
+    <h2 data-split>Install</h2>
+    <div class="cols" data-stagger>
       <div>
         <h3>1. Download</h3>
         <p>Get <code>MotionLift-x.y.z.zxp</code> from the <a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">latest release</a> (Pro buyers also get it with their receipt).</p>
@@ -141,8 +173,8 @@
   </section>
 
   <section id="licence">
-    <h2>Licence, privacy and refunds</h2>
-    <div class="cols">
+    <h2 data-split>Licence, privacy and refunds</h2>
+    <div class="cols" data-stagger>
       <div>
         <h3>Your licence</h3>
         <ul>
@@ -173,7 +205,7 @@
   </section>
 
   <section id="support">
-    <h2>Support</h2>
+    <h2 data-split>Support</h2>
     <p class="lede" style="margin:0">Questions, a key that won't activate, or a refund: <a href="mailto:Footy1x.ae@gmail.com">Footy1x.ae@gmail.com</a>. We usually answer within two days.</p>
   </section>
 
@@ -182,5 +214,12 @@
     <span>After Effects is a trademark of Adobe. Motion Lift isn't made by or affiliated with Adobe.</span>
   </footer>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
+<script src="motion.js" defer></script>
+<script src="fx.js" defer></script>
 </body>
 </html>
