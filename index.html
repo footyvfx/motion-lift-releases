@@ -51,6 +51,11 @@
   .intro h1 em { font-style: normal; color: var(--accent); display: block; }   /* the rotating words: always their own line */
   .intro p { color: var(--text-2); margin: 0; font-size: 17px; max-width: 30em; }
   .intro .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .more { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 6px 2px; font-size: 15px; font-weight: 600;
+          color: var(--text-2); text-decoration: none; }
+  .more:hover { color: var(--text-1); }
+  .more i { font-style: normal; color: var(--accent); transition: transform .2s ease; }
+  .more:hover i { transform: translateX(3px); }
   /* the 3D keyframe (keyframe.js) on a transparent canvas; no WebGL = a flat CSS diamond */
   .kf { position: relative; width: 100%; aspect-ratio: 1 / .82; max-height: 380px; margin: 0 auto; }
   .kf canvas { width: 100%; height: 100%; display: block; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
@@ -181,6 +186,7 @@
         <a class="btn btn-accent btn-star" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Get Pro for $3</a>
         <a class="btn btn-ghost" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Try it free</a>
       </div>
+      <a class="more" href="motion-lift.html" data-hero>See more details <i aria-hidden="true">&rarr;</i></a>
     </div>
     <div class="kf" data-keyframe>
       <canvas role="img" aria-label="A glossy orange After Effects keyframe you can pull and tap; it springs back and wobbles"></canvas>
@@ -224,16 +230,17 @@
 
   <section id="products" class="grid" aria-label="Products">
     <article class="card featured" data-spotlight>
-      <a class="media" href="motion-lift.html"><img data-parallax src="panel.png" width="520" height="860" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, the reference and lifted speed curves on top of each other"></a>
+      <a class="media" href="motion-lift.html"><img data-parallax src="panel.png" width="520" height="1002" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with Track for me, Lift ramp, Lift CC, Reverse, Presets and Licence below"></a>
       <div class="body">
         <span class="tag">After Effects extension</span>
         <h2 data-split>Motion Lift Pro</h2>
         <p data-reveal>Turn a tracked move into a few clean keyframes with the exact eases, and keep the handheld shake on its own control.</p>
         <ul class="feats" data-stagger>
-          <li>Lift every selected property in one click</li>
-          <li>Preset library: save a lifted ease, apply it anywhere</li>
-          <li>Copy any ease as CSS cubic-bezier()</li>
-          <li>One licence per computer, updates in the panel</li>
+          <li>Lift a tracked move into a few clean keys, exact eases</li>
+          <li>Track for me: a keyed null on every moving thing (free)</li>
+          <li>Lift ramp (Beta): copy a Twixtor speed ramp off any edit</li>
+          <li>Pro: every selected property at once, presets, CSS copy</li>
+          <li>Next update: Reverse and Lift CC (Beta)</li>
         </ul>
         <div class="row" data-reveal>
           <span class="price">$3 <small>one-time</small></span>
