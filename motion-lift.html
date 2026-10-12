@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Motion Lift Pro · footy1x</title>
-<meta name="description" content="Motion Lift turns a dense After Effects track into a few clean keyframes with the exact eases. Free Lite version; Pro is $3.">
+<meta name="description" content="Motion Lift for After Effects: lift a tracked move into a few clean keyframes with the exact eases, Track for me, Lift ramp and more. Free Lite version; Pro is $3.">
 <meta name="theme-color" content="#1b1b1b">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
@@ -87,13 +87,20 @@
   .yes { color: var(--accent); font-weight: 600; }
   .price { font-size: 22px; font-weight: 700; color: var(--text-1); }
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px; }
+  .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .feat { background: var(--surface); border-radius: 12px; padding: 20px; box-shadow: inset 0 0 0 1px var(--line); }
+  .feat p { color: var(--text-2); margin: 0; }
+  .ftags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+  .ftag { font-size: 12px; font-weight: 600; line-height: 1; padding: 5px 9px; border-radius: 999px; color: var(--text-2); box-shadow: inset 0 0 0 1px var(--line-2); white-space: nowrap; }
+  .ftag.pro { color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .ftag.next { color: var(--text-1); background: var(--surface-2); box-shadow: none; }
   ul { padding-left: 20px; margin: 0; }
   li { margin: 4px 0; }
   code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; color: var(--text-1); }
   footer { padding: 36px 0 56px; border-top: 1px solid var(--line); font-size: 14px; color: var(--text-3); display: flex; flex-wrap: wrap; gap: 8px 24px; }
   @media (max-width: 760px) {
     .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 16px; }
-    .steps, .cols { grid-template-columns: 1fr; }
+    .steps, .cols, .feat-grid { grid-template-columns: 1fr; }
     .top nav { display: none; }
     .wrap { padding: 0 16px; }
     th, td { padding: 10px 8px; }
@@ -105,7 +112,7 @@
   <header class="top">
     <svg class="mark" viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(255,255,255,.14)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg>
     <div class="brand"><a href="./" style="color:inherit;text-decoration:none">footy1x</a> <span>/ Motion Lift</span></div>
-    <nav><a href="#lift" data-scramble>The lift</a><a href="#how" data-scramble>How it works</a><a href="#pricing" data-scramble>Pricing</a><a href="#licence" data-scramble>Licence</a><a href="#support" data-scramble>Support</a></nav>
+    <nav><a href="#lift" data-scramble>The lift</a><a href="#how" data-scramble>How it works</a><a href="#features" data-scramble>Features</a><a href="#pricing" data-scramble>Pricing</a><a href="#licence" data-scramble>Licence</a><a href="#support" data-scramble>Support</a></nav>
   </header>
 
   <div class="hero" data-threads>
@@ -119,7 +126,7 @@
       </div>
       <p class="fine" data-hero>One download for everyone: it runs as Lite until you enter a Pro key. After Effects 2022 or later, Mac or Windows.</p>
     </div>
-    <div class="shot-wrap"><img class="shot" data-tilt src="panel.png" width="520" height="860" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with the reference and lifted speed curves on top of each other"></div>
+    <div class="shot-wrap"><img class="shot" data-tilt src="panel.png" width="520" height="1002" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with Track for me, Lift ramp, Lift CC, Reverse, Presets and Licence below"></div>
   </div>
 
   <section id="lift">
@@ -141,6 +148,25 @@
     </div>
   </section>
 
+  <section id="features">
+    <h2 data-split>Everything in the panel</h2>
+    <p class="lede" data-reveal>One panel docked in After Effects. Lift is the heart of it; the rest takes the slow jobs around it.</p>
+    <div class="feat-grid" data-stagger>
+      <div class="feat" data-spotlight><div class="ftags"><span class="ftag">Free</span><span class="ftag pro">Pro: all at once</span></div><h3>Lift</h3>
+        <p>Track the move, click Lift: hundreds of tracked keys become a few clean ones whose speed curve matches the original. The handheld shake goes on its own switch. Lite lifts one property at a time; Pro lifts every selected property at once.</p></div>
+      <div class="feat" data-spotlight><div class="ftags"><span class="ftag">Free</span></div><h3>Track for me</h3>
+        <p>Select a clip: it finds the cuts, the camera move and every moving thing, and adds a keyed null for each, parented to the clip, in one undo. Best on motion graphics; on live footage you mainly get the camera and the cuts.</p></div>
+      <div class="feat" data-spotlight><div class="ftags"><span class="ftag">Beta</span><span class="ftag pro">Apply is Pro</span></div><h3>Lift ramp</h3>
+        <p>Reads the Twixtor speed ramp off someone&rsquo;s edit and puts it on your clip as clean Speed % or Time Remap keys. With the original clip it lands within a few % of the real ramp; without it, it&rsquo;s a best guess.</p></div>
+      <div class="feat" data-spotlight><div class="ftags"><span class="ftag pro">Pro</span></div><h3>Presets and CSS</h3>
+        <p>Save any lifted ease and put it on any keyframes in one click, or copy it as CSS <code>cubic-bezier()</code> for web animation.</p></div>
+      <div class="feat" data-spotlight><div class="ftags"><span class="ftag next">Next update</span><span class="ftag">Beta</span><span class="ftag pro">Pro</span></div><h3>Reverse</h3>
+        <p>The clip-end reverse from football edits: each clip plays forward, turns at an orange Rewind marker and rewinds in 0.72 s, with a zoom on the same frames. Each clip in its own comp, one undo.</p></div>
+      <div class="feat" data-spotlight><div class="ftags"><span class="ftag next">Next update</span><span class="ftag">Beta</span><span class="ftag pro">Apply is Pro</span></div><h3>Lift CC</h3>
+        <p>Reads the colour correction off someone&rsquo;s edit (the grade, sharpening, grain, vignette, flicker and more) and builds it on one adjustment layer over your clip. Exact with the original clip; Save LUT keeps the grade as a .cube.</p></div>
+    </div>
+  </section>
+
   <section id="pricing">
     <h2 data-split>Lite and Pro</h2>
     <table>
@@ -151,6 +177,8 @@
         <tr><td>Shake split onto its own effect</td><td>Yes</td><td>Yes</td></tr>
         <tr><td>Track for me (finds cuts, camera moves and moving things, adds keyed nulls)</td><td>Yes</td><td>Yes</td></tr>
         <tr><td>Lift ramp (Beta): read the speed ramp off a Twixtor edit</td><td>Read it</td><td class="yes">Read it and put it on your clip</td></tr>
+        <tr><td>Reverse (Beta, next update): the clip-end reverse with a zoom</td><td>No</td><td class="yes">Yes</td></tr>
+        <tr><td>Lift CC (Beta, next update): read an edit&rsquo;s colour correction</td><td>Read it</td><td class="yes">Read it and build it on one adjustment layer</td></tr>
         <tr><td>Preset library: save a lifted ease, apply it anywhere</td><td>No</td><td class="yes">Yes</td></tr>
         <tr><td>Copy an ease as CSS <code>cubic-bezier()</code></td><td>No</td><td class="yes">Yes</td></tr>
         <tr><td>Updates</td><td>Yes, in the panel</td><td>Yes, in the panel</td></tr>
