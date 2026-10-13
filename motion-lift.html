@@ -203,6 +203,27 @@
     .gnav.open .gnav-menu { background: rgba(255,255,255,.96); box-shadow: 0 30px 60px -24px rgba(0,0,0,.25); }
     .gnav-menu a { color: var(--text-1); }
   }
+  /* 13 Oct 2026 polish: the front page's heading scale and rhythm; Lite and Pro as plan cards */
+  section { padding: 96px 0; border-top: 0; }
+  h2 { font-size: clamp(30px, 3.8vw, 46px); line-height: 1.08; letter-spacing: -.03em; margin: 0 0 18px; }
+  .lede { font-size: 19px; line-height: 1.5; }
+  .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px; }
+  .plan { position: relative; display: flex; flex-direction: column; border-radius: 28px; padding: 32px;
+          background: var(--surface); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border: 1px solid rgba(255,255,255,.8);
+          box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 12px 32px -14px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.95); }
+  .plan.pro { box-shadow: 0 0 0 2px var(--accent), 0 24px 48px -24px rgba(255,122,61,.55), inset 0 1px 0 rgba(255,255,255,.95); }
+  .plan h3 { font-size: 22px; margin: 0; }
+  .plan .amt { font-size: 44px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; margin: 8px 0 0; color: var(--text-1); }
+  .plan .amt small { font-size: 15px; font-weight: 500; letter-spacing: 0; color: var(--text-2); margin-left: 8px; }
+  .plan ul { list-style: none; margin: 20px 0 26px; padding: 0; display: grid; gap: 11px; }
+  .plan li { position: relative; margin: 0; padding-left: 27px; font-size: 15px; line-height: 1.4; color: var(--text-1); }
+  .plan li::before { content: ""; position: absolute; left: 0; top: 2px; width: 17px; height: 17px; border-radius: 50%; background: var(--accent); }
+  .plan li::after { content: ""; position: absolute; left: 6px; top: 5.5px; width: 4px; height: 7.5px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .plan li.plus { padding-left: 0; font-weight: 600; }
+  .plan li.plus::before, .plan li.plus::after { display: none; }
+  .plan li em { font-style: normal; font-size: 11px; font-weight: 600; color: var(--text-2); margin-left: 6px; padding: 2px 7px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--line-2); }
+  .plan .btn { margin-top: auto; justify-content: center; }
+  @media (max-width: 760px) { section { padding: 64px 0; } .plans { grid-template-columns: 1fr; } .plan .amt small { display: block; margin: 4px 0 0; } }
 </style>
 </head>
 <body id="top">
@@ -287,23 +308,34 @@
 
   <section id="pricing">
     <h2 data-split>Lite and Pro</h2>
-    <table>
-      <thead><tr><th></th><th>Lite <span class="fine">free</span></th><th>Pro <span class="price">$3</span> <span class="fine">one-time</span></th></tr></thead>
-      <tbody data-stagger>
-        <tr><td>Lift a tracked move into a few eased keys</td><td>One property at a time</td><td class="yes">Every selected property at once</td></tr>
-        <tr><td>Speed / value graph, error and peak speed</td><td>Yes</td><td>Yes</td></tr>
-        <tr><td>Shake split onto its own effect</td><td>Yes</td><td>Yes</td></tr>
-        <tr><td>Track for me (finds cuts, camera moves and moving things, adds keyed nulls)</td><td>Yes</td><td>Yes</td></tr>
-        <tr><td>Lift ramp (Beta): read the speed ramp off a Twixtor edit</td><td>Read it</td><td class="yes">Read it and put it on your clip</td></tr>
-        <tr><td>Reverse (Beta): the clip-end reverse with a zoom</td><td>No</td><td class="yes">Yes</td></tr>
-        <tr><td>Lift CC (Beta): read an edit&rsquo;s colour correction</td><td>Read it</td><td class="yes">Read it and build it on one adjustment layer</td></tr>
-        <tr><td>Preset library: save a lifted ease, apply it anywhere</td><td>No</td><td class="yes">Yes</td></tr>
-        <tr><td>Updates</td><td>Yes, in the panel</td><td>Yes, in the panel</td></tr>
-      </tbody>
-    </table>
-    <div class="cta" data-reveal style="margin-top:24px">
-      <a class="btn btn-accent btn-star" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Buy Pro ($3)</a>
-      <a class="btn btn-ghost" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free (Lite)</a>
+    <p class="lede" data-reveal>Start free. Pro adds the batch Lift, presets and every Apply, for $3 once.</p>
+    <div class="plans" data-stagger>
+      <div class="plan">
+        <h3>Lite</h3>
+        <div class="amt">Free</div>
+        <ul>
+          <li>Lift one property at a time</li>
+          <li>Speed / value graph, error and peak speed</li>
+          <li>Shake split onto its own effect</li>
+          <li>Track for me: cuts, camera moves and moving things as keyed nulls</li>
+          <li>Lift ramp and Lift CC: read them <em>Beta</em></li>
+          <li>Updates in the panel</li>
+        </ul>
+        <a class="btn btn-ghost" href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Download free</a>
+      </div>
+      <div class="plan pro">
+        <h3>Pro</h3>
+        <div class="amt">$3<small>one-time · one computer</small></div>
+        <ul>
+          <li class="plus">Everything in Lite, plus:</li>
+          <li>Lift every selected property at once</li>
+          <li>Preset library: save a lifted ease, apply it anywhere</li>
+          <li>Lift ramp: put the ramp on your clip <em>Beta</em></li>
+          <li>Lift CC: build it on one adjustment layer <em>Beta</em></li>
+          <li>Reverse, the clip-end rewind with a zoom <em>Beta</em></li>
+        </ul>
+        <a class="btn btn-accent btn-star" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Buy Pro ($3)</a>
+      </div>
     </div>
     <p class="fine">Prices in US dollars; taxes are added at checkout where they apply. Checkout and receipts are handled by Lemon Squeezy, our reseller.</p>
   </section>
@@ -370,6 +402,10 @@
         </ul>
       </div>
       <div>
+        <h3>This website</h3>
+        <p>footy1x.store counts page views with Cloudflare Web Analytics. It sets no cookies and doesn&rsquo;t follow individual visitors; the panel itself sends no analytics.</p>
+      </div>
+      <div>
         <h3>Refunds</h3>
         <p>All sales are final. If your key won't activate or Pro doesn't work on your computer, email us and we'll sort it out.</p>
       </div>
@@ -416,6 +452,9 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
-<script src="motion.js?v=20261012s" defer></script>
+<script src="motion.js?v=20261013a" defer></script>
+<!-- Visit stats: Cloudflare Web Analytics (no cookies, no individual visitors). The token is the public site id from
+     Cloudflare > Web analytics > footy1x.store > Manage site; the dashboard is there too. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ae19d1f118524552bea4a54e08a238dd"}'></script>
 </body>
 </html>
