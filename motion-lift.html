@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Motion Lift Pro · footy1x</title>
 <meta name="description" content="Motion Lift for After Effects: lift a tracked move into a few clean keyframes with the exact eases, Track for me, Lift ramp and more. Free Lite version; Pro is $3.">
-<meta name="theme-color" content="#1b1b1b">
+<meta name="theme-color" content="#f5f5f7">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://footy1x.store/motion-lift.html">
@@ -15,11 +15,12 @@
 <meta name="twitter:card" content="summary">
 <!-- Motion Lift's details page (the store front is index.html). Hosted free on GitHub Pages from the
      motion-lift-releases repo (index.html + panel.png at the repo root; python3 extension/release.py site uploads them).
-     "Get Pro" = the Lemon Squeezy checkout link (see reference/motion-lift-release-steps.md). Motion: motion.js
-     (Lenis + GSAP), including the #lift chart, and fx.js (the React Bits-style pieces), styles in fx.css; each file lists
-     its hooks at the top. Without them, or with "reduce motion" on, the page is the same, just still.
-     When fx.css, motion.js, fx.js or keyframe.js changes, bump the ?v= on their links in both pages: GitHub Pages lets
-     browsers cache files for 10 minutes, and the new number makes them fetch the new file with the new page. -->
+     "Buy" = the Lemon Squeezy checkout link (see reference/motion-lift-release-steps.md). White Apple-glass look since
+     12 Oct 2026 (the same nav, palette and footer as index.html; fx.js / fx.css, the dark-theme extras, are no longer
+     loaded here). Motion: motion.js (Lenis + GSAP), including the #lift chart and the scroll-played #film; it lists its
+     hooks at the top. Without it, or with "reduce motion" on, the page is the same, just still.
+     When motion.js changes, bump the ?v= on its link in both pages: GitHub Pages lets browsers cache files for 10 minutes,
+     and the new number makes them fetch the new file with the new page. -->
 <script>
   (function (d) {                       /* hide the hero until motion.js animates it in; show it anyway after 2.5 s */
     if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -27,11 +28,11 @@
     setTimeout(function () { if (!window.__motionReady) d.classList.remove("js-motion"); }, 2500);
   })(document.documentElement);
 </script>
-<link rel="stylesheet" href="fx.css?v=20261009p">
 <style>
   :root {
-    --bg: #1b1b1b; --surface: #232323; --surface-2: #2b2b2b; --line: rgba(255,255,255,.08); --line-2: rgba(255,255,255,.14);
-    --text-1: #f2f2f2; --text-2: #b9b9b9; --text-3: #8a8a8a; --accent: #ff7a3d; --accent-ink: #220f05; --accent-soft: rgba(255,122,61,.1);
+    --bg: #f5f5f7; --surface: rgba(255,255,255,.62); --surface-2: #ffffff; --line: rgba(0,0,0,.08); --line-2: rgba(0,0,0,.14);
+    --text-1: #1d1d1f; --text-2: #6e6e73; --text-3: #86868b; --accent: #ff7a3d; --accent-ink: #220f05; --accent-soft: rgba(255,122,61,.14);
+    --link: #c4501a; --orange-text: #f26419; --blur: blur(28px) saturate(180%);
     --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; }
@@ -105,14 +106,113 @@
     .wrap { padding: 0 16px; }
     th, td { padding: 10px 8px; }
   }
+  /* shared with index.html (12 Oct 2026): the global nav, the product bar and the footer */
+  .gnav { position: sticky; top: 0; z-index: 50; background: rgba(22,22,23,.78); border-bottom: 1px solid var(--line);
+          -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
+  .gnav .gwrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; display: flex; align-items: center; height: 48px; gap: 20px; }
+  .gbrand { display: flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 600; font-size: 16px; letter-spacing: -.01em; color: var(--text-1); }
+  .gbrand svg { width: 22px; height: 22px; }
+  .gnav nav { display: flex; gap: 30px; margin: 0 auto; }
+  .gnav nav a { font-size: 13px; color: #d2d2d7; text-decoration: none; opacity: .88; }
+  .gnav nav a:hover, .gnav nav a[aria-current] { opacity: 1; color: #fff; }
+  .shop-pill { display: inline-flex; align-items: center; height: 28px; padding: 0 14px; border-radius: 999px; background: var(--accent);
+               color: var(--accent-ink); font-size: 13px; font-weight: 600; text-decoration: none; }
+  .menu-btn { display: none; width: 36px; height: 36px; border: 0; background: none; color: var(--text-1); cursor: pointer; padding: 0; }
+  .menu-btn span { display: block; width: 18px; height: 1.5px; background: currentColor; margin: 5px auto; transition: transform .25s ease; }
+  .gnav.open .menu-btn span:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .gnav.open .menu-btn span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+  .gnav-menu { display: none; }
+  .pnav { display: flex; align-items: center; gap: 20px; min-height: 54px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .pn-title { font-size: 21px; font-weight: 650; letter-spacing: -.015em; color: var(--text-1); text-decoration: none; }
+  .pnav nav { margin-left: auto; display: flex; gap: 22px; font-size: 12px; }
+  .pnav nav a { color: var(--text-2); text-decoration: none; }
+  .pnav nav a:hover { color: var(--text-1); }
+  .pn-buy { display: inline-flex; align-items: center; height: 28px; padding: 0 13px; border-radius: 999px; background: var(--accent); color: var(--accent-ink);
+            font-size: 12px; font-weight: 600; text-decoration: none; }
+  .film { padding: 8px 0 88px; }
+  .film h2 { font-size: clamp(28px, 4.4vw, 48px); line-height: 1.1; letter-spacing: -.03em; margin: 0 0 10px; }
+  .film > p { color: var(--text-2); margin: 0 0 28px; font-size: 17px; max-width: 34em; }
+  .film-frame { position: relative; width: min(100%, calc(80vh * 16 / 9)); aspect-ratio: 16 / 9; margin: 0 auto; border-radius: 16px;
+    overflow: hidden; background: #141414; box-shadow: inset 0 0 0 1px var(--line), 0 30px 80px rgba(0,0,0,.45); }
+  .film.is-tall .film-frame { width: min(100%, calc(76vh * 9 / 16)); aspect-ratio: 9 / 16; }
+  .film video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #141414; }
+  .film-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.08); pointer-events: none; }
+  .film-bar i { display: block; height: 100%; background: var(--accent); transform-origin: left center; transform: scaleX(0); }
+  .film-hint { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); font-size: 12px; color: var(--text-1); white-space: nowrap;
+    background: rgba(0,0,0,.55); padding: 5px 12px; border-radius: 999px; pointer-events: none; transition: opacity .5s ease; }
+  .film-hint.gone, .film.still .film-hint, .film.still .film-bar { opacity: 0; }
+  .gfoot { margin-top: 40px; background: #161617; color: #86868b; font-size: 12px; line-height: 1.6; }
+  .gfoot .gwrap { max-width: 1120px; margin: 0 auto; padding: 34px 22px 26px; }
+  .gfoot .note { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .gfoot .cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .gfoot h5 { margin: 0 0 8px; color: #d2d2d7; font-size: 12px; font-weight: 600; }
+  .gfoot ul { list-style: none; margin: 0; padding: 0; }
+  .gfoot li { margin: 6px 0; }
+  .gfoot a { color: #a1a1a6; text-decoration: none; }
+  .gfoot a:hover { color: var(--text-1); text-decoration: underline; }
+  .gfoot .legal { padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
+  @media (max-width: 860px) { .pnav nav { display: none; } .pn-buy { margin-left: auto; } }
+  @media (max-width: 720px) {
+    .gnav nav, .gnav .shop-pill { display: none; }
+    .menu-btn { display: block; margin-left: auto; }
+    .gnav.open .gnav-menu { display: block; position: absolute; left: 0; right: 0; top: 48px; background: #161617; padding: 12px 22px 26px;
+                            border-bottom: 1px solid var(--line); box-shadow: 0 30px 60px -20px rgba(0,0,0,.8); }
+    .gnav-menu a { display: block; font-size: 26px; font-weight: 600; letter-spacing: -.02em; text-decoration: none; padding: 8px 0; color: var(--text-1); }
+    .gfoot .cols { grid-template-columns: 1fr 1fr; }
+  }
+  /* white Apple-glass look (12 Oct 2026, matching index.html) */
+  .js-motion [data-split], .js-motion [data-hero] { visibility: hidden; }
+  body::before { content: ""; position: fixed; inset: -10vh -10vw; z-index: -1; pointer-events: none;
+    background: radial-gradient(40% 36% at 88% 8%, rgba(255,122,61,.24), transparent 70%),
+                radial-gradient(36% 32% at 6% 40%, rgba(10,132,255,.12), transparent 70%),
+                radial-gradient(40% 36% at 74% 94%, rgba(255,170,90,.18), transparent 70%); }
+  body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--link); }
+  h1 { letter-spacing: -.03em; }
+  h1 em { color: var(--orange-text); }
+  .yes { color: var(--link); }
+  .btn { border-radius: 999px; }
+  .btn-ghost { background: rgba(255,255,255,.7); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
+  .btn-ghost:hover { background: #fff; }
+  .btn-accent { box-shadow: 0 8px 20px -10px rgba(255,122,61,.8); }
+  .shot { border-radius: 20px; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 30px 60px -20px rgba(0,0,0,.35); }
+  .step, .feat, .lift-fig { background: var(--surface); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.8); box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 12px 32px -14px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.95); }
+  .lift-grid { stroke: rgba(0,0,0,.06); }
+  .lift-dots circle { fill: #aeaeb2; }
+  .lift-shake { stroke: #c7c7cc; }
+  .lift-key { stroke: #fff; }
+  .ftag { background: rgba(255,255,255,.7); }
+  .ftag.pro { color: var(--link); box-shadow: inset 0 0 0 1px rgba(196,80,26,.4); }
+  .ftag.next { color: var(--accent-ink); background: var(--accent); }
+  .gnav { background: rgba(255,255,255,.66); border-bottom: 1px solid var(--line); }
+  .gbrand { color: var(--text-1); }
+  .gnav nav a { color: var(--text-1); opacity: .8; }
+  .gnav nav a:hover, .gnav nav a[aria-current] { color: var(--text-1); opacity: 1; }
+  .gfoot { background: rgba(255,255,255,.45); border-top: 1px solid var(--line); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); color: var(--text-2); }
+  .gfoot h5 { color: var(--text-1); }
+  .gfoot a { color: var(--text-2); }
+  @media (max-width: 720px) {
+    .gnav.open .gnav-menu { background: rgba(255,255,255,.96); box-shadow: 0 30px 60px -24px rgba(0,0,0,.25); }
+    .gnav-menu a { color: var(--text-1); }
+  }
 </style>
 </head>
-<body>
+<body id="top">
+<header class="gnav">
+  <div class="gwrap">
+    <a class="gbrand" href="./" aria-label="footy1x home"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(0,0,0,.1)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg> footy1x</a>
+    <nav aria-label="Main"><a href="./#shop">Shop</a><a href="./#work">Work</a><a href="motion-lift.html" aria-current="page">Motion Lift</a><a href="./#contact">Contact</a></nav>
+    <a class="shop-pill" href="./#shop">Shop</a>
+    <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="gmenu"><span></span><span></span></button>
+  </div>
+  <div class="gnav-menu" id="gmenu"><a href="./#shop">Shop</a><a href="./#work">Work</a><a href="motion-lift.html">Motion Lift</a><a href="./#contact">Contact</a></div>
+</header>
 <div class="wrap">
-  <header class="top">
-    <svg class="mark" viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(255,255,255,.14)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg>
-    <div class="brand"><a href="./" style="color:inherit;text-decoration:none">footy1x</a> <span>/ Motion Lift</span></div>
-    <nav><a href="#lift" data-scramble>The lift</a><a href="#how" data-scramble>How it works</a><a href="#features" data-scramble>Features</a><a href="#pricing" data-scramble>Pricing</a><a href="#licence" data-scramble>Licence</a><a href="#support" data-scramble>Support</a></nav>
+  <header class="pnav">
+    <a class="pn-title" href="#top">Motion Lift</a>
+    <nav aria-label="Motion Lift"><a href="#lift">The lift</a><a href="#film">Watch</a><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#install">Install</a><a href="#licence">Licence</a><a href="#support">Support</a></nav>
+    <a class="pn-buy" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Buy</a>
   </header>
 
   <div class="hero" data-threads>
@@ -137,6 +237,17 @@
       <div class="lift-meta"><span><b data-lift-count>5</b>keys</span><span data-lift-tag>Lifted: 5 keys, exact eases</span></div>
       <svg viewBox="0 0 1000 370" data-lift role="img" aria-label="A shaky tracked curve of 240 keys turns into a smooth orange curve with 5 keyframes; the shake moves to a separate line below"></svg>
     </figure>
+  </section>
+
+  <section class="film" id="film" data-film data-wide="lift-film-wide.mp4" data-wide-poster="lift-film-wide.jpg" data-tall="lift-film-tall.mp4"
+           data-tall-poster="lift-film-tall.jpg" aria-label="Motion Lift in action">
+    <h2 data-split>Scroll to watch a lift.</h2>
+    <p data-reveal>The real panel, start to finish: a shaky track goes in, a few clean keys come out.</p>
+    <div class="film-frame">
+      <video muted playsinline preload="none" aria-label="Motion Lift's explainer: a tracked move becomes a few clean keyframes"></video>
+      <span class="film-hint">Keep scrolling</span>
+      <div class="film-bar"><i></i></div>
+    </div>
   </section>
 
   <section id="how">
@@ -253,17 +364,35 @@
     <p class="lede" style="margin:0">Questions, a key that won't activate, or a refund: <a href="mailto:Footy1x.ae@gmail.com">Footy1x.ae@gmail.com</a>. We usually answer within two days.</p>
   </section>
 
-  <footer>
-    <span>&copy; 2026 Motion Lift</span>
-    <span>After Effects is a trademark of Adobe. Motion Lift isn't made by or affiliated with Adobe.</span>
-  </footer>
 </div>
+
+<footer class="gfoot">
+  <div class="gwrap">
+    <div class="note">Motion Lift Pro is $3, one-time, for one computer at a time. Prices in US dollars; taxes are added at checkout where they apply.
+      Checkout and receipts are handled by Lemon Squeezy, our reseller.</div>
+    <div class="cols">
+      <div><h5>Shop</h5><ul><li><a href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Motion Lift Pro</a></li><li><a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Motion Lift Lite (free)</a></li><li><a href="#features">What's new in 0.6.1</a></li></ul></div>
+      <div><h5>Motion Lift</h5><ul><li><a href="#features">Features</a></li><li><a href="#pricing">Lite and Pro</a></li><li><a href="#install">Install</a></li></ul></div>
+      <div><h5>Work</h5><ul><li><a href="./#work">Football edits</a></li><li><a href="./#work">Motion design</a></li><li><a href="https://www.tiktok.com/@footy1x.ae">TikTok</a></li></ul></div>
+      <div><h5>Contact</h5><ul><li><a href="mailto:Footy1x.ae@gmail.com">Email</a></li><li><a href="#support">Support</a></li><li><a href="#licence">Licence, privacy and refunds</a></li></ul></div>
+    </div>
+    <div class="legal"><span>Copyright &copy; 2026 footy1x. All rights reserved.</span><span>After Effects is a trademark of Adobe. Motion Lift isn't made by or affiliated with Adobe.</span></div>
+  </div>
+</footer>
+<script>
+  (function () {
+    var nav = document.querySelector(".gnav"), mb = document.querySelector(".menu-btn");
+    if (mb) mb.addEventListener("click", function () { var o = nav.classList.toggle("open"); mb.setAttribute("aria-expanded", String(o)); });
+    Array.prototype.forEach.call(document.querySelectorAll(".gnav-menu a"), function (a) {
+      a.addEventListener("click", function () { nav.classList.remove("open"); if (mb) mb.setAttribute("aria-expanded", "false"); });
+    });
+  })();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
-<script src="motion.js?v=20261009p" defer></script>
-<script src="fx.js?v=20261009p" defer></script>
+<script src="motion.js?v=20261012s" defer></script>
 </body>
 </html>
