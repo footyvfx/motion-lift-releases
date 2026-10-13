@@ -44,6 +44,7 @@ export function play(o) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, vw < 700 ? 1.4 : 1.6));
   renderer.setSize(vw, vh, false);
+  canvas.style.width = vw + "px"; canvas.style.height = vh + "px";   // the visible viewport (iOS: 100vh would include the space under Safari's bar)
   renderer.setClearColor(0xf5f5f7, 1);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
