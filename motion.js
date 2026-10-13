@@ -49,7 +49,10 @@
       onSplit: function (self) { return g.from(self.words, vars); } });
   });
   var afterSplit = document.querySelector('[data-split="hero"]') ? 0.45 : 0;  // wait for a split hero heading, if there is one
-  g.from("[data-hero]", { y: 24, autoAlpha: 0, duration: 1, ease: "power3.out", stagger: 0.09, delay: heroDelay + afterSplit });
+  function heroIn() { g.from("[data-hero]", { y: 24, autoAlpha: 0, duration: 1, ease: "power3.out", stagger: 0.09, delay: heroDelay + afterSplit }); }
+  // the front page's entrance plays first: the hero comes in when it hands over
+  if (window.__introPending && !window.__introDone) document.addEventListener("intro:handoff", function () { heroDelay = 0.05; heroIn(); }, { once: true });
+  else heroIn();
   g.utils.toArray("[data-reveal]").forEach(function (el) {
     g.from(el, { y: 40, autoAlpha: 0, duration: 1.05, ease: "power3.out", clearProps: "transform", scrollTrigger: onScroll(el) });
   });
