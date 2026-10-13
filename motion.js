@@ -6,6 +6,7 @@
  *   data-split    heading rises in word by word (data-split="hero" = on load, otherwise when scrolled to)
  *   data-hero     fades up on load, after the heading      data-reveal  fades up when scrolled to
  *   data-stagger  its children fade up one after another   data-parallax  drifts against the scroll (wide screens)
+ *                 (reveals clear their transform when done, so a card's CSS :hover transform still works)
  *   data-marquee  rows of .mq-track that slide, faster and skewed while you scroll
  *   data-tilt     tilts towards the pointer                 .btn  magnetic (mouse only)
  *   data-lift     the chart's <svg> (inside figure.lift-fig[hidden])
@@ -50,10 +51,10 @@
   var afterSplit = document.querySelector('[data-split="hero"]') ? 0.45 : 0;  // wait for a split hero heading, if there is one
   g.from("[data-hero]", { y: 24, autoAlpha: 0, duration: 1, ease: "power3.out", stagger: 0.09, delay: heroDelay + afterSplit });
   g.utils.toArray("[data-reveal]").forEach(function (el) {
-    g.from(el, { y: 40, autoAlpha: 0, duration: 1.05, ease: "power3.out", scrollTrigger: onScroll(el) });
+    g.from(el, { y: 40, autoAlpha: 0, duration: 1.05, ease: "power3.out", clearProps: "transform", scrollTrigger: onScroll(el) });
   });
   g.utils.toArray("[data-stagger]").forEach(function (el) {
-    g.from(el.children, { y: 32, autoAlpha: 0, duration: 0.9, ease: "power3.out", stagger: 0.08, scrollTrigger: onScroll(el) });
+    g.from(el.children, { y: 32, autoAlpha: 0, duration: 0.9, ease: "power3.out", stagger: 0.08, clearProps: "transform", scrollTrigger: onScroll(el) });
   });
   g.utils.toArray(".card.featured").forEach(function (el) {
     g.fromTo(el, { clipPath: "inset(9% 5% 9% 5% round 28px)", autoAlpha: 0 },
