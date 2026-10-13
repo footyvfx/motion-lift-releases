@@ -4,7 +4,7 @@
  * field, so the glass refracts them. The tiles are thick glass (MeshPhysicalMaterial transmission) with studio
  * reflections (RoomEnvironment), soft shadows and a warm rim light.
  * Timeline (s):
- *   0.0  camera low at pitch level (drifts with the pointer); "footy1x" in white (the DOM title)
+ *   0.0  camera low at pitch level (drifts with the pointer); "footy1x" (the DOM title, dark ink with an orange "1x")
  *   0.35 tiles fall in from above the camera, turning, and glide onto the field, the middle first
  *   1.6  the camera cranes up and round; 2.15 the tiles slide together and frost; 2.5 a light sweeps across
  *   3.2  overhead, framed exactly on the hero's stage; 3.3 the canvas fades and the page is there
@@ -110,7 +110,10 @@ export function play(o) {
     for (const s of shapeMeshes) {
       const t = getComputedStyle(s.el).transform;
       let a = 1, b = 0, c = 0, d = 1, e = 0, f = 0;
-      if (t && t !== "none") { const v = t.match(/-?[\d.e]+/g).map(Number); [a, b, c, d, e, f] = v.length === 6 ? v : [v[0], v[1], v[4], v[5], v[12], v[13]]; }
+      if (t && t !== "none") {                           // matrix(a, b, c, d, e, f) or matrix3d(16 values)
+        const v = t.slice(t.indexOf("(") + 1, -1).split(",").map(Number);
+        [a, b, c, d, e, f] = t.startsWith("matrix3d") ? [v[0], v[1], v[4], v[5], v[12], v[13]] : v;
+      }
       const sc = Math.hypot(a, b), rot = Math.atan2(b, a);
       const [x, z] = toWorld(s.left + s.w / 2 + e, s.top + s.h / 2 + f);
       s.m.position.x = x; s.m.position.z = z;
