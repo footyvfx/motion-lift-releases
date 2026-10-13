@@ -99,6 +99,13 @@
   li { margin: 4px 0; }
   code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; color: var(--text-1); }
   footer { padding: 36px 0 56px; border-top: 1px solid var(--line); font-size: 14px; color: var(--text-3); display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  details.more { margin-top: 28px; border-radius: 16px; padding: 14px 18px; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px var(--line); }
+  details.more summary { cursor: pointer; font-weight: 600; color: var(--text-1); }
+  details.more p { color: var(--text-2); margin: 12px 0 0; }
+  details.more pre { margin: 8px 0 0; max-width: 100%; overflow-x: auto; background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+  details.more pre code { background: none; padding: 0; font-size: 12.5px; white-space: pre; }
+  .trouble { margin-top: 32px; }
+  .trouble li { margin: 8px 0; }
   @media (max-width: 760px) {
     .hero { grid-template-columns: 1fr; gap: 32px; padding-top: 16px; }
     .steps, .cols, .feat-grid { grid-template-columns: 1fr; }
@@ -269,8 +276,8 @@
         <p>Select a clip: it finds the cuts, the camera move and every moving thing, and adds a keyed null for each, parented to the clip, in one undo. Best on motion graphics; on live footage you mainly get the camera and the cuts.</p></div>
       <div class="feat" data-spotlight><div class="ftags"><span class="ftag">Beta</span><span class="ftag pro">Apply is Pro</span></div><h3>Lift ramp</h3>
         <p>Reads the Twixtor speed ramp off someone&rsquo;s edit and puts it on your clip as clean Speed % or Time Remap keys. With the original clip it lands within a few % of the real ramp; without it, it&rsquo;s a best guess.</p></div>
-      <div class="feat" data-spotlight><div class="ftags"><span class="ftag pro">Pro</span></div><h3>Presets and CSS</h3>
-        <p>Save any lifted ease and put it on any keyframes in one click, or copy it as CSS <code>cubic-bezier()</code> for web animation.</p></div>
+      <div class="feat" data-spotlight><div class="ftags"><span class="ftag pro">Pro</span></div><h3>Presets</h3>
+        <p>Save any lifted ease, name it, and put it on any keyframes in one click: every pair of selected keys gets that ease, in one undo.</p></div>
       <div class="feat" data-spotlight><div class="ftags"><span class="ftag next">New</span><span class="ftag">Beta</span><span class="ftag pro">Pro</span></div><h3>Reverse</h3>
         <p>The clip-end reverse from football edits: each clip plays forward, turns at an orange Rewind marker and rewinds in 0.72 s, with a zoom on the same frames. Each clip in its own comp, one undo.</p></div>
       <div class="feat" data-spotlight><div class="ftags"><span class="ftag next">New</span><span class="ftag">Beta</span><span class="ftag pro">Apply is Pro</span></div><h3>Lift CC</h3>
@@ -291,7 +298,6 @@
         <tr><td>Reverse (Beta): the clip-end reverse with a zoom</td><td>No</td><td class="yes">Yes</td></tr>
         <tr><td>Lift CC (Beta): read an edit&rsquo;s colour correction</td><td>Read it</td><td class="yes">Read it and build it on one adjustment layer</td></tr>
         <tr><td>Preset library: save a lifted ease, apply it anywhere</td><td>No</td><td class="yes">Yes</td></tr>
-        <tr><td>Copy an ease as CSS <code>cubic-bezier()</code></td><td>No</td><td class="yes">Yes</td></tr>
         <tr><td>Updates</td><td>Yes, in the panel</td><td>Yes, in the panel</td></tr>
       </tbody>
     </table>
@@ -304,25 +310,42 @@
 
   <section id="install">
     <h2 data-split>Install</h2>
-    <div class="cols" data-stagger>
-      <div>
-        <h3>1. Download</h3>
-        <p>Get <code>MotionLift-x.y.z.zxp</code> from the <a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">latest release</a> (Pro buyers also get it with their receipt).</p>
-      </div>
-      <div>
-        <h3>2. Install the .zxp</h3>
-        <p>With a free ZXP installer such as aescripts' ZXP Installer or Anastasiy's Extension Manager. Restart After Effects, then
-          <strong>Window &gt; Extensions &gt; Motion Lift</strong>.</p>
-      </div>
-      <div>
-        <h3>3. Pro: enter your key</h3>
-        <p>Open <strong>Licence</strong> at the bottom of the panel, paste the key from your receipt email, click <strong>Activate</strong>.</p>
-      </div>
-      <div>
-        <h3>Updates</h3>
-        <p>The panel checks for a new version once a day and installs it when you click <strong>Install</strong>. Restart After Effects to finish.
-          On Windows it opens the download instead (Windows keeps the panel's files in use): install it with your ZXP installer.</p>
-      </div>
+    <p class="lede" data-reveal>Motion Lift is a panel for After Effects 2022 or later, on Mac and Windows. Lite and Pro are the same download: Pro unlocks
+      with your licence key.</p>
+    <div class="steps" data-stagger>
+      <div class="step" data-spotlight><h3>Download</h3><p>Get <code>MotionLift-x.y.z.zxp</code> (x.y.z is the version) from the
+        <a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">latest release</a> on GitHub. Pro buyers also get it with their receipt.</p></div>
+      <div class="step" data-spotlight><h3>Get a free ZXP installer</h3><p>After Effects can&rsquo;t open a .zxp by itself. Download
+        <a href="https://aescripts.com/learn/post/zxp-installer">aescripts ZXP/UXP Installer</a> or <a href="https://install.anastasiy.com/">Anastasiy&rsquo;s Extension Manager</a>. Both are free, for Mac and Windows.</p></div>
+      <div class="step" data-spotlight><h3>Install Motion Lift</h3><p>Quit After Effects. Open the installer and drag the .zxp onto its window (or use its
+        Install button and pick the file). Wait until it says it&rsquo;s installed.</p></div>
+      <div class="step" data-spotlight><h3>Open the panel</h3><p>Start After Effects and choose <strong>Window &gt; Extensions &gt; Motion Lift</strong>.
+        Drag its tab to dock it next to your other panels.</p></div>
+      <div class="step" data-spotlight><h3>Pro: activate</h3><p>Open <strong>Licence</strong> at the bottom of the panel, paste the key from your receipt
+        email and click <strong>Activate</strong>. A key works on one computer at a time: <strong>Deactivate</strong> frees it for another.</p></div>
+    </div>
+    <p class="fine"><strong>Updates:</strong> the panel checks for a new version once a day and installs it when you click <strong>Install</strong>; restart
+      After Effects to finish. On Windows it opens the download instead (Windows keeps the panel&rsquo;s files in use): install it with your ZXP installer.</p>
+    <details class="more" data-reveal>
+      <summary>No installer app? Use Adobe&rsquo;s own installer</summary>
+      <p>Creative Cloud comes with a command-line installer. Put the .zxp in your Downloads folder, change <code>x.y.z</code> below to its version, run
+        the line for your computer, then restart After Effects.</p>
+      <p><strong>Mac</strong>, in Terminal (one line):</p>
+      <pre><code>"/Library/Application Support/Adobe/Adobe Desktop Common/RemoteComponents/UPI/UnifiedPluginInstallerAgent/UnifiedPluginInstallerAgent.app/Contents/MacOS/UnifiedPluginInstallerAgent" --install ~/Downloads/MotionLift-x.y.z.zxp</code></pre>
+      <p><strong>Windows</strong>, in Command Prompt (one line):</p>
+      <pre><code>"C:\Program Files\Common Files\Adobe\Adobe Desktop Common\RemoteComponents\UPI\UnifiedPluginInstallerAgent\UnifiedPluginInstallerAgent.exe" /install "%USERPROFILE%\Downloads\MotionLift-x.y.z.zxp"</code></pre>
+    </details>
+    <div class="trouble" data-reveal>
+      <h3>If it doesn&rsquo;t show up</h3>
+      <ul>
+        <li><strong>Not under Window &gt; Extensions?</strong> Quit After Effects completely and open it again. Check it&rsquo;s After Effects 2022 or later
+          (About After Effects shows the version), then install the .zxp again.</li>
+        <li><strong>The installer says it isn&rsquo;t compatible?</strong> Motion Lift needs After Effects 2022 or later.</li>
+        <li><strong>Activate doesn&rsquo;t work?</strong> Check you&rsquo;re online and pasted the whole key. If the key is active on another computer, click
+          Deactivate there first.</li>
+        <li><strong>Still stuck?</strong> Email <a href="mailto:Footy1x.ae@gmail.com">Footy1x.ae@gmail.com</a> with your After Effects version and whether
+          you&rsquo;re on Mac or Windows.</li>
+      </ul>
     </div>
   </section>
 
