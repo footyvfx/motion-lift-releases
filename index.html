@@ -27,11 +27,20 @@
      data-cat (football | motion), data-src and poster; credit the original creator when it's a remake.
      Motion: motion.js (Lenis + GSAP: data-hero / data-reveal / data-stagger) and the inline script at the bottom (menu,
      scroller, filter, previews, the hero's pitch). Without them, or with "reduce motion" on, the page still works. -->
+<script type="importmap">{"imports": {"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script>
   (function (d) {                       /* hide the hero until motion.js animates it in; show it anyway after 2.5 s */
     if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     d.classList.add("js-motion");
     setTimeout(function () { if (!window.__motionReady) d.classList.remove("js-motion"); }, 2500);
+    /* the entrance: once per visit, not for a #link; a failsafe lifts the curtain after 7 s whatever happens */
+    var seen = false;
+    try { seen = !!sessionStorage.getItem("fx-intro"); } catch (e) { }
+    if (/[?&]intro\b/.test(location.search)) seen = false;   /* ?intro replays it (for checking) */
+    if (!seen && !location.hash) {
+      d.classList.add("intro"); window.__introPending = true;
+      setTimeout(function () { if (!window.__introDone) { d.classList.remove("intro"); document.dispatchEvent(new Event("intro:handoff")); } }, 7000);
+    }
   })(document.documentElement);
 </script>
 <style>
@@ -112,6 +121,20 @@
   .hero .lede { font-size: clamp(21px, 2.3vw, 28px); line-height: 1.28; color: var(--text-1); max-width: 21em; margin: 24px auto 30px;
                 font-weight: 600; letter-spacing: -.022em; text-wrap: balance; }
   .hero .actions { justify-content: center; }
+  /* the entrance (html.intro): a curtain in the page colour, the pitch above it full screen, the name over both */
+  #intro, #intro-title { display: none; }
+  html.intro { overflow: hidden; }
+  html.intro #intro { display: block; position: fixed; inset: 0; z-index: 90; background: var(--bg); }
+  html.intro #intro-title { display: block; position: fixed; left: 0; right: 0; top: 50%; z-index: 96; transform: translateY(-50%);
+    text-align: center; color: #fff; font-size: clamp(76px, 16vw, 240px); font-weight: 800; letter-spacing: -.05em; line-height: 1;
+    text-shadow: 0 10px 60px rgba(120,40,0,.35); opacity: 0; pointer-events: none; }
+  html.intro #intro-title span { color: #fff2e8; }
+  html.intro .stage { z-index: 95; }
+  html.intro3d .stage { z-index: auto; }
+  html.intro3d #intro-title { z-index: 98; color: var(--text-1); text-shadow: 0 2px 30px rgba(255,255,255,.6); }
+  html.intro3d #intro-title span { color: var(--orange-text); }
+  canvas.intro3d { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 97; display: block; }
+
   /* the stage: a slow colour field (a few flat shapes drifting) under a pane of glass with the pitch etched on it */
   .stage { --pad: 34px; --spring: cubic-bezier(.3, 1.18, .42, 1); position: relative; max-width: 1120px; margin: 64px auto 0;
            padding: var(--pad); border-radius: 40px; overflow: hidden; text-align: left;
@@ -172,23 +195,36 @@
   .card { border-radius: 28px; overflow: hidden; transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
   a.card { text-decoration: none; color: inherit; display: block; }
   .card:hover { transform: translateY(-3px); box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 20px 44px -16px rgba(0,0,0,.18), 0 50px 90px -50px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.95); }
-  .tag { display: inline-flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tag { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
   .tag b { font-size: 12px; font-weight: 600; line-height: 1; padding: 6px 10px; border-radius: 999px; color: var(--text-2); background: rgba(255,255,255,.7); box-shadow: inset 0 0 0 1px var(--hair); }
   .tag b.hot { color: var(--accent-ink); background: var(--accent); box-shadow: none; }
   .tag b.pro { color: var(--link); box-shadow: inset 0 0 0 1px rgba(196,80,26,.35); }
 
   /* shop */
-  .shop-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 20px; }
+  .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .p-card { padding: 34px; display: flex; flex-direction: column; min-height: 300px; }
   .p-card .price { font-size: 17px; color: var(--text-2); margin: 14px 0 22px; }
   .p-card .price b { color: var(--text-1); font-size: 28px; letter-spacing: -.02em; margin-right: 6px; }
   .p-card p { margin: 10px 0 0; color: var(--text-2); max-width: 26em; }
-  .p-pro { grid-row: span 2; min-height: 660px; padding-bottom: 0; }
+  /* Pro: the words on the left, the whole panel on the right (never cropped); stacked on phones */
+  .p-pro { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 48px; padding: 48px 56px; }
+  .p-pro .pro-copy { position: relative; z-index: 1; min-width: 0; }
   .p-pro h3 { font-size: clamp(34px, 4vw, 48px); }
-  .p-pro .shot-wrap { margin-top: auto; display: flex; justify-content: center; height: 330px; overflow: hidden; }
-  .p-pro .shot { width: min(380px, 78%); height: auto; align-self: flex-start; margin-top: 30px; border-radius: 20px 20px 0 0;
-                 box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 30px 60px -20px rgba(0,0,0,.35); }
-  .p-lite .mark { width: 76px; height: 76px; margin-bottom: 18px; filter: drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
+  .p-pro .ticks { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 10px; }
+  .p-pro .ticks li { position: relative; padding-left: 28px; color: var(--text-1); font-size: 16px; line-height: 1.35; }
+  .p-pro .ticks li::before { content: ""; position: absolute; left: 0; top: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--accent);
+          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Ccircle cx='9' cy='9' r='9'/%3E%3C/svg%3E"); }
+  .p-pro .ticks li::after { content: ""; position: absolute; left: 6px; top: 6px; width: 5px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .p-pro .ticks span { margin-left: 6px; font-size: 11px; font-weight: 600; color: var(--text-2); padding: 3px 7px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--hair); vertical-align: 1px; }
+  .p-pro .price { margin-top: 22px; }
+  .p-pro .pro-shot { position: relative; z-index: 1; align-self: center; }
+  .p-pro .shot { display: block; height: min(540px, 64vh); width: auto; max-width: none; border-radius: 22px;
+                 box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 30px 60px -24px rgba(0,0,0,.4); }
+  .p-lite .mark, .p-upload .mark { width: 76px; height: 76px; margin-bottom: 18px; filter: drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
+  .specs { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; }
+  .specs li { font-size: 13px; font-weight: 600; line-height: 1; padding: 8px 13px; border-radius: 999px; color: var(--text-1);
+              background: rgba(255,255,255,.75); box-shadow: inset 0 0 0 1px var(--hair); }
+  .specs li.on { color: var(--accent-ink); background: var(--accent); box-shadow: none; }
   .why { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
   .why > div { border-radius: 22px; padding: 22px 22px 24px; font-size: 15px; color: var(--text-2); }
   .why b { display: block; color: var(--text-1); font-size: 17px; margin: 12px 0 4px; letter-spacing: -.01em; }
@@ -244,10 +280,22 @@
   .w-tile .state { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; opacity: 0; transition: opacity .2s; }
   .w-tile:hover .state, .w-tile.paused .state, .w-tile:focus-visible .state { opacity: 1; }
   .w-tile .state svg { width: 12px; height: 12px; }
-  .w-more { grid-column: span 2; aspect-ratio: auto; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 30px 34px; cursor: default;
-            background: var(--glass); box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.95); }
-  .w-more b { font-size: 26px; letter-spacing: -.02em; margin-bottom: 6px; }
-  .w-more p { margin: 0 0 16px; color: var(--text-2); font-size: 16px; }
+  /* the TikTok tile: an orange card with a glass play button, the whole tile is the link */
+  .w-more { grid-column: span 2; aspect-ratio: auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 34px 40px;
+            text-decoration: none; color: #fff; background: linear-gradient(135deg, #ff9d5c 0%, #ff7a3d 52%, #e9541c 100%);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 24px 48px -28px rgba(200,70,10,.7); }
+  .w-more-copy { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+  .w-more b { font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -.025em; line-height: 1.05; }
+  .w-more-copy > span { margin-top: 8px; font-size: 16px; color: rgba(255,255,255,.88); }
+  .w-more em { font-style: normal; margin-top: 18px; font-weight: 600; font-size: 16px; }
+  .w-more em i { font-style: normal; display: inline-block; transition: transform .2s ease; }
+  .w-more:hover em i { transform: translateX(3px); }
+  .w-more-play { flex: 0 0 auto; width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center;
+                 background: rgba(255,255,255,.22); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+                 box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.55), 0 18px 30px -18px rgba(90,30,0,.6);
+                 transition: transform .5s cubic-bezier(.3,1.3,.4,1); }
+  .w-more:hover .w-more-play { transform: scale(1.06); }
+  .w-more-play svg { width: 30px; height: 30px; margin-left: 4px; }
   .credit { margin: 18px 0 0; font-size: 13px; color: var(--text-3); }
 
   /* contact */
@@ -274,7 +322,7 @@
   /* ------------------------------------------------------------------ smaller screens */
   @media (max-width: 960px) {
     .shop-grid { grid-template-columns: 1fr 1fr; }
-    .p-pro { grid-column: 1 / -1; grid-row: auto; min-height: 600px; }
+    .p-pro { grid-column: 1 / -1; grid-row: auto; }
     .why, .install { grid-template-columns: 1fr 1fr; }
     .contact-grid { grid-template-columns: 1fr 1fr; }
     .c-mail { grid-column: 1 / -1; }
@@ -293,10 +341,14 @@
     .m-sheet, .m-gloss, .m-shine { border-radius: 16px; }
     .shop-grid, .contact-grid, .why, .install { grid-template-columns: 1fr; }
     .p-card { padding: 28px; }
-    .p-pro { min-height: 560px; }
-    .p-pro .shot-wrap { height: 260px; }
+    .p-pro { grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 28px; }
+    .p-pro .pro-shot { display: flex; justify-content: center; min-width: 0; }
+    .p-pro .shot { height: auto; width: 100%; max-width: 280px; }
     .w-grid { grid-template-columns: 1fr; }
     .w-tile.big, .w-more { grid-column: auto; grid-row: auto; }
+    .w-more { padding: 28px; gap: 16px; }
+    .w-more-play { width: 60px; height: 60px; }
+    .w-more-play svg { width: 22px; height: 22px; }
     .gfoot .cols { grid-template-columns: 1fr 1fr; }
     .row-head { margin-top: 56px; }
   }
@@ -307,6 +359,8 @@
 </style>
 </head>
 <body>
+<div id="intro" aria-hidden="true"></div>
+<div id="intro-title" aria-hidden="true">footy<span>1x</span></div>
 
 <header class="gnav" id="top">
   <div class="wrap">
@@ -321,7 +375,7 @@
   <div class="gnav-menu" id="gmenu"><a href="#work">Work</a><a href="#shop">Shop</a><a href="motion-lift.html">Motion Lift</a><a href="#contact">Contact</a></div>
 </header>
 
-<div class="ribbon">New in Motion Lift 0.6.1: Reverse and Lift CC, in beta. <a href="motion-lift.html#features">Learn more <span aria-hidden="true">›</span></a></div>
+<div class="ribbon">New in Motion Lift: Reverse and Lift CC, in beta. <a href="motion-lift.html#features">Learn more <span aria-hidden="true">›</span></a></div>
 
 <main>
   <!-- ================================================================ hero -->
@@ -391,11 +445,10 @@
           <span class="state glass" aria-hidden="true"><svg viewBox="0 0 12 12" fill="#1d1d1f"><path d="M3 1.5v9l7.5-4.5z"/></svg></span>
           <figcaption><div class="glass"><b>BLOOM</b><span>Blender · original music</span></div></figcaption>
         </figure>
-        <div class="w-tile w-more">
-          <b>More on TikTok.</b>
-          <p>The full edits, with sound.</p>
-          <a class="link" href="https://www.tiktok.com/@footy1x.ae">@footy1x.ae <i aria-hidden="true">›</i></a>
-        </div>
+        <a class="w-tile w-more" href="https://www.tiktok.com/@footy1x.ae">
+          <span class="w-more-copy"><b>More on TikTok.</b><span>The full edits, with sound.</span><em>@footy1x.ae <i aria-hidden="true">›</i></em></span>
+          <span class="w-more-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z" fill="#fff"/></svg></span>
+        </a>
       </div>
       <p class="credit">Previews play muted. Football footage belongs to its owners.</p>
     </div>
@@ -411,15 +464,23 @@
 
       <div class="shop-grid" data-stagger>
         <article class="card glass p-card p-pro">
-          <div class="tag"><b class="hot">New 0.6.1</b><b>After Effects extension</b></div>
-          <h3>Motion Lift Pro</h3>
-          <p>Copy any move's exact ease in one click. Every selected property at once, the preset library, Reverse, and Apply for Lift ramp and Lift CC.</p>
-          <div class="price"><b>$3</b>one-time · one computer</div>
-          <div class="actions">
-            <a class="cta-btn primary" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Buy</a>
-            <a class="link" href="motion-lift.html">Learn more <i aria-hidden="true">›</i></a>
+          <div class="pro-copy">
+            <div class="tag"><b class="hot">New</b><b>After Effects extension</b></div>
+            <h3>Motion Lift Pro</h3>
+            <p>Copy any move&rsquo;s exact ease in one click.</p>
+            <ul class="ticks">
+              <li>Lift every selected property at once</li>
+              <li>Save eases as presets and apply them anywhere</li>
+              <li>Reverse, the clip-end rewind <span>Beta</span></li>
+              <li>Apply for Lift ramp and Lift CC <span>Beta</span></li>
+            </ul>
+            <div class="price"><b>$3</b>one-time · one computer</div>
+            <div class="actions">
+              <a class="cta-btn primary" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Buy</a>
+              <a class="link" href="motion-lift.html">Learn more <i aria-hidden="true">›</i></a>
+            </div>
           </div>
-          <div class="shot-wrap"><img class="shot" src="panel.png" width="520" height="1002" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with Track for me, Lift ramp, Lift CC, Reverse, Presets and Licence below" loading="lazy"></div>
+          <div class="pro-shot"><img class="shot" src="panel.png" width="520" height="1002" alt="The Motion Lift panel after a Lift: 240 tracked keys became 5, with Track for me, Lift ramp, Lift CC, Reverse, Presets and Licence below" loading="lazy"></div>
         </article>
 
         <article class="card glass p-card p-lite">
@@ -435,9 +496,11 @@
         </article>
 
         <article class="card glass p-card p-upload">
+          <svg class="mark" viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b"/><path d="M10 12.6V5.4M7 8.3l3-3 3 3" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.2 12.4v1.7c0 .6.5 1.1 1.1 1.1h7.4c.6 0 1.1-.5 1.1-1.1v-1.7" fill="none" stroke="#b9b9b9" stroke-width="1.3" stroke-linecap="round"/></svg>
           <div class="tag"><b>For PC editors</b></div>
-          <h3>Upload Method (PC)</h3>
+          <h3>Upload Method</h3>
           <p>The method I use to upload my edits from PC for 1080p 60 fps quality on TikTok.</p>
+          <ul class="specs" aria-label="Specs"><li class="on">1080p</li><li>60 fps</li><li>PC</li></ul>
           <div class="price"><b>$8</b>one-time</div>
           <div class="actions">
             <a class="cta-btn primary" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/50a3744c-5291-49a5-9044-303cf8233bb0">Buy</a>
@@ -638,12 +701,12 @@
         el.classList.toggle("out", t.out);
       }
       function strokes() {                                 // ~2.5 px lines whatever the tile size
-        px = grid.getBoundingClientRect().width / cols;
+        px = grid.offsetWidth / cols;
         var g = defs.querySelector("[data-lines]");
         if (px && g) g.setAttribute("stroke-width", ((portrait ? 2 : 2.6) / (px / S)).toFixed(3));
       }
       function build() {
-        var narrow = stage.getBoundingClientRect().width < 640;
+        var narrow = stage.offsetWidth < 640;
         if (narrow === portrait && tiles.length) return strokes();
         portrait = narrow; cols = portrait ? 4 : 8; rows = portrait ? 6 : 4; outR = portrait ? "16px" : "24px"; tileR = portrait ? "14px" : "22px";
         grid.style.setProperty("--cols", cols); grid.style.setProperty("--rows", rows);
@@ -682,7 +745,7 @@
               later(d - 350, function () { stage.classList.add("whole"); later(350, function () { sweep(); later(2900, loop); }); }); }); }); });
       }
       build();
-      if (window.ResizeObserver) new ResizeObserver(function () { var w = Math.round(stage.getBoundingClientRect().width); if (w !== w0) { w0 = w; build(); } }).observe(stage);
+      if (window.ResizeObserver) new ResizeObserver(function () { var w = stage.offsetWidth; if (w !== w0) { w0 = w; build(); } }).observe(stage);
       stage.addEventListener("pointermove", function (e) {          // the pane's highlight follows the pointer
         var b = stage.getBoundingClientRect();
         stage.style.setProperty("--mx", ((e.clientX - b.left) / b.width * 100).toFixed(1) + "%");
@@ -694,7 +757,114 @@
         visible = es[0].isIntersecting; stage.classList.toggle("paused", !visible); resume();
       }).observe(stage);
       document.addEventListener("visibilitychange", resume);
-      later(1600, function () { sweep(); later(1600, loop); });
+      function start(hold) { later(hold, function () { sweep(); later(1600, loop); }); }
+      function explodeNow() {                              // split instantly (the entrance flies the tiles in from here)
+        stage.classList.remove("whole");
+        var push = px * .075;
+        tiles.forEach(function (t) { t.x = (t.c + .5 - cols / 2) * push; t.y = (t.r + .5 - rows / 2) * push; t.s = .86; t.out = true; t.round = false;
+          t.el.style.transition = "none"; paint(t, 0); });
+        void grid.offsetWidth;
+        tiles.forEach(function (t) { t.el.style.transition = ""; });
+      }
+      function wholeNow() {                                // one pane instantly (a skipped entrance)
+        tiles.forEach(function (t) { t.x = 0; t.y = 0; t.s = 1; t.out = false; t.round = false; t.el.style.transition = "none"; paint(t, 0); });
+        stage.classList.add("whole"); void grid.offsetWidth;
+        tiles.forEach(function (t) { t.el.style.transition = ""; });
+      }
+      window.__pitch = { stage: stage, tiles: function () { return tiles; }, dims: function () { return [cols, rows]; },
+                         explodeNow: explodeNow, wholeNow: wholeNow, gather: gather, sweep: sweep, start: start,
+                         whole: function () { stage.classList.add("whole"); } };
+      if (!window.__introPending) start(1600);
+    })();
+
+    // The entrance (front page, once per visit). With WebGL 2: intro3d.js, a three.js studio shot of the glass pitch (thick
+    // glass tiles fall in and fuse while the camera cranes from pitch level to overhead, landing exactly on the hero). Without
+    // it, or if three.js doesn't arrive within 3 s: the CSS version below (the pitch fills the screen, the tiles fly in and
+    // fuse, the camera pulls back into the page). Either way the hero comes in on "intro:handoff" (motion.js waits for it)
+    // and a click, key, wheel or touch skips to the page.
+    (function () {
+      if (!window.__introPending) return;
+      var root = document.documentElement, P = window.__pitch, veil = document.getElementById("intro"), title = document.getElementById("intro-title");
+      var done = false, handed = false, timers = [], anims = [], EXPO = "cubic-bezier(.16, 1, .3, 1)";
+      function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+      function handoff() { if (!handed) { handed = true; document.dispatchEvent(new Event("intro:handoff")); } }
+      function finish() {
+        if (done) return; done = true; window.__introDone = true;
+        timers.forEach(clearTimeout);
+        try { sessionStorage.setItem("fx-intro", "1"); } catch (e) { }
+        root.classList.remove("intro");
+        if (P) { P.stage.style.transform = ""; P.stage.style.borderRadius = ""; anims.forEach(function (a) { try { a.cancel(); } catch (e) { } }); P.start(2400); }
+        handoff();
+        ["pointerdown", "keydown", "wheel", "touchstart"].forEach(function (ev) { removeEventListener(ev, skip, true); });
+      }
+      if (!P || !veil || reduce) { finish(); return; }
+      var stage = P.stage, skipNow = function () { };
+      function skip() { if (!done && !handed) skipNow(); }
+      ["pointerdown", "keydown", "wheel", "touchstart"].forEach(function (ev) { addEventListener(ev, skip, true); });
+      stage.removeAttribute("data-reveal");                // the entrance places the pitch itself
+      window.scrollTo(0, 0);
+      var can3d = false;
+      try { can3d = !!(window.WebGL2RenderingContext && document.createElement("canvas").getContext("webgl2")); } catch (e) { }
+      if (can3d) {
+        root.classList.add("intro3d");
+        // the name comes up straight away, while three.js loads
+        var titleIn = title.animate([{ opacity: 0, letterSpacing: ".3em", filter: "blur(14px)" }, { opacity: 1, letterSpacing: "-.05em", filter: "blur(0px)" }],
+          { duration: 1000, delay: 120, easing: EXPO, fill: "forwards" });
+        var gave = false, wait = setTimeout(function () { if (!gave) { gave = true; titleIn.cancel(); root.classList.remove("intro3d"); cssIntro(); } }, 3000);
+        import("./intro3d.js?v=20261013a").then(function (mod) {
+          if (gave) return; gave = true; clearTimeout(wait);
+          var d = P.dims();
+          var ctl = mod.play({ stage: stage, title: title, titleIn: titleIn, cols: d[0], rows: d[1], portrait: d[1] > d[0],
+            onHandoff: function () { veil.style.display = "none"; handoff(); },
+            onDone: function () { root.classList.remove("intro3d"); finish(); } });
+          skipNow = function () { ctl.skip(); };
+        }).catch(function () { if (!gave) { gave = true; clearTimeout(wait); titleIn.cancel(); root.classList.remove("intro3d"); cssIntro(); } });
+      } else cssIntro();
+
+      function cssIntro() {
+      var r = stage.getBoundingClientRect(), vw = innerWidth, vh = innerHeight;
+      var radius = getComputedStyle(stage).borderTopLeftRadius;
+      var S = Math.max(vw / r.width, vh / r.height) * 1.02;
+      var cover = "translate(" + (vw / 2 - (r.left + r.width / 2)).toFixed(1) + "px," + (vh / 2 - (r.top + r.height / 2)).toFixed(1) + "px) scale(" + S.toFixed(4) + ")";
+      var drift = "translate(" + (vw / 2 - (r.left + r.width / 2)).toFixed(1) + "px," + (vh / 2 - (r.top + r.height / 2)).toFixed(1) + "px) scale(" + (S * 1.08).toFixed(4) + ")";
+      stage.style.transform = cover; stage.style.borderRadius = "0px";
+      anims.push(stage.animate([{ transform: drift }, { transform: cover }], { duration: 2700, easing: "cubic-bezier(.33, 0, .2, 1)" }));   // a slow push in
+      P.explodeNow();
+      var d = P.dims(), cols = d[0], rows = d[1];
+      // the name: wide and soft, settling tight and sharp
+      anims.push(title.animate([{ opacity: 0, letterSpacing: ".3em", filter: "blur(14px)" }, { opacity: 1, letterSpacing: "-.05em", filter: "blur(0px)" }],
+        { duration: 1000, delay: 150, easing: EXPO, fill: "forwards" }));
+      // the tiles fly in from the camera, the middle first
+      P.tiles().forEach(function (t) {
+        var ox = t.c + .5 - cols / 2, oy = t.r + .5 - rows / 2, k = Math.hypot(ox, oy), to = t.el.style.transform;
+        var from = "translate(" + (ox * 90) + "px," + (oy * 90) + "px) scale(1.9)";
+        anims.push(t.el.animate([{ transform: from, opacity: 0, filter: "blur(12px)" }, { transform: to, opacity: 1, filter: "blur(0px)" }],
+          { duration: 1150, delay: 420 + k * 70, easing: EXPO, fill: "backwards" }));
+      });
+      at(1900, function () {                               // they fuse into one pane, the middle last
+        var g = P.gather();
+        at(g - 350, function () { P.whole(); P.sweep(); });
+      });
+      at(2150, function () {                               // the name steps back
+        anims.push(title.animate([{ opacity: 1, transform: "translateY(-50%) scale(1)", filter: "blur(0px)" }, { opacity: 0, transform: "translateY(-50%) scale(1.08)", filter: "blur(10px)" }],
+          { duration: 520, easing: "cubic-bezier(.4,0,.6,1)", fill: "forwards" }));
+      });
+      function pullBack(ms) {                              // the camera pulls back: the pitch lands in its place in the hero
+        var CAM = "cubic-bezier(.65, 0, .35, 1)";
+        anims.push(stage.animate([{ transform: cover, borderRadius: "0px" }, { transform: "translate(0px,0px) scale(1)", borderRadius: radius }],
+          { duration: ms, easing: CAM, fill: "forwards" }));
+        anims.push(veil.animate([{ opacity: 1 }, { opacity: 0 }], { duration: ms * .55, delay: ms * .3, easing: "ease-in-out", fill: "forwards" }));
+        at(ms * .45, handoff);                             // the hero comes in once the camera is half way back
+        at(ms + 40, finish);
+      }
+      at(2700, function () { pullBack(1600); });
+      skipNow = function () {
+        timers.forEach(clearTimeout); timers = [];
+        anims.forEach(function (a) { try { a.cancel(); } catch (e) { } }); anims = [];
+        P.wholeNow(); title.style.opacity = "0";
+        pullBack(750);
+      };
+      }
     })();
 
     // "Inside Motion Lift": arrow buttons page the scroller by one card
@@ -751,6 +921,9 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" defer></script>
-<script src="motion.js?v=20261012s" defer></script>
+<script src="motion.js?v=20261013a" defer></script>
+<!-- Visit stats: Cloudflare Web Analytics (no cookies, no individual visitors). The token is the public site id from
+     Cloudflare > Web analytics > footy1x.store > Manage site; the dashboard is there too. -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ae19d1f118524552bea4a54e08a238dd"}'></script>
 </body>
 </html>
