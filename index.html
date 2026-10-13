@@ -811,7 +811,7 @@
         var titleIn = title.animate([{ opacity: 0, letterSpacing: ".3em", filter: "blur(14px)" }, { opacity: 1, letterSpacing: "-.05em", filter: "blur(0px)" }],
           { duration: 1000, delay: 120, easing: EXPO, fill: "forwards" });
         var gave = false, wait = setTimeout(function () { if (!gave) { gave = true; titleIn.cancel(); root.classList.remove("intro3d"); cssIntro(); } }, 3000);
-        import("./intro3d.js?v=20261013a").then(function (mod) {
+        import("./intro3d.js?v=20261013b").then(function (mod) {
           if (gave) return; gave = true; clearTimeout(wait);
           var d = P.dims();
           var ctl = mod.play({ stage: stage, title: title, titleIn: titleIn, cols: d[0], rows: d[1], portrait: d[1] > d[0],
