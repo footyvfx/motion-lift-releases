@@ -197,8 +197,18 @@
 
   /* inside Motion Lift */
   .row-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin: 70px 0 22px; }
+  /* install, four steps (the full guide is motion-lift.html#install) */
+  .install { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: st; }
+  .install li { counter-increment: st; border-radius: 22px; padding: 22px 22px 24px; }
+  .install li::before { content: counter(st); position: relative; z-index: 1; display: inline-grid; place-items: center; width: 28px; height: 28px;
+                        border-radius: 50%; margin-bottom: 14px; background: var(--accent); color: var(--accent-ink); font-weight: 700; font-size: 14px; }
+  .install b { position: relative; z-index: 1; display: block; color: var(--text-1); font-size: 17px; letter-spacing: -.01em; margin-bottom: 6px; }
+  .install p { position: relative; z-index: 1; margin: 0; color: var(--text-2); font-size: 15px; line-height: 1.45; }
+  .install a { color: var(--link); text-decoration: none; }
+  .install a:hover { text-decoration: underline; }
   .row-head h3 { font-size: clamp(26px, 3.2vw, 34px); }
   .row-head h3 span { color: var(--text-3); }
+  .row-head > .link { white-space: nowrap; margin-bottom: 4px; }
   .sc-nav { display: flex; gap: 10px; }
   .sc-nav button { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--edge); background: var(--glass-2); color: var(--text-1); cursor: pointer;
                    display: grid; place-items: center; transition: opacity .2s, background .2s; box-shadow: 0 6px 16px -10px rgba(0,0,0,.3);
@@ -266,7 +276,7 @@
   @media (max-width: 960px) {
     .shop-grid { grid-template-columns: 1fr 1fr; }
     .p-pro { grid-column: 1 / -1; grid-row: auto; min-height: 600px; }
-    .why { grid-template-columns: 1fr 1fr; }
+    .why, .install { grid-template-columns: 1fr 1fr; }
     .contact-grid { grid-template-columns: 1fr 1fr; }
     .c-mail { grid-column: 1 / -1; }
     .w-grid { grid-template-columns: 1fr 1fr; }
@@ -282,7 +292,7 @@
     .hero { padding-top: 48px; }
     .stage { --pad: 16px; margin-top: 44px; border-radius: 30px; }
     .m-sheet, .m-gloss, .m-shine { border-radius: 16px; }
-    .shop-grid, .contact-grid, .why { grid-template-columns: 1fr; }
+    .shop-grid, .contact-grid, .why, .install { grid-template-columns: 1fr; }
     .p-card { padding: 28px; }
     .p-pro { min-height: 560px; }
     .p-pro .shot-wrap { height: 260px; }
@@ -404,7 +414,7 @@
         <article class="card glass p-card p-pro">
           <div class="tag"><b class="hot">New 0.6.1</b><b>After Effects extension</b></div>
           <h3>Motion Lift Pro</h3>
-          <p>Copy any move's exact ease in one click. Every selected property at once, the preset library, CSS copy, Reverse, and Apply for Lift ramp and Lift CC.</p>
+          <p>Copy any move's exact ease in one click. Every selected property at once, the preset library, Reverse, and Apply for Lift ramp and Lift CC.</p>
           <div class="price"><b>$3</b>one-time · one computer</div>
           <div class="actions">
             <a class="cta-btn primary" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Buy</a>
@@ -439,6 +449,17 @@
         <div class="glass"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="22" height="14" rx="2"/><path d="M10 24h8M14 20v4"/></svg><b>Mac and Windows.</b>After Effects 2022 or later.</div>
         <div class="glass"><svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="14" r="5"/><path d="M15 14h10M21 14v4M25 14v3"/></svg><b>One computer per licence.</b>Move it to a new one any time.</div>
       </div>
+
+      <div class="row-head" data-reveal>
+        <h3>Install. <span>Up and running in a minute.</span></h3>
+        <a class="link" href="motion-lift.html#install">Full guide <i aria-hidden="true">›</i></a>
+      </div>
+      <ol class="install" data-stagger>
+        <li class="glass"><b>Download</b><p>Get the .zxp free from <a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">GitHub</a>. Pro buyers also get it with their receipt.</p></li>
+        <li class="glass"><b>Get a free installer</b><p>After Effects can&rsquo;t open a .zxp by itself. Use <a href="https://aescripts.com/learn/post/zxp-installer">aescripts ZXP/UXP Installer</a> or <a href="https://install.anastasiy.com/">Anastasiy&rsquo;s Extension Manager</a>.</p></li>
+        <li class="glass"><b>Install</b><p>Quit After Effects, open the installer and drag the .zxp onto its window.</p></li>
+        <li class="glass"><b>Open it</b><p>In After Effects: <strong>Window &gt; Extensions &gt; Motion Lift</strong>. Pro: paste your key under Licence, then Activate.</p></li>
+      </ol>
 
       <div class="row-head" data-reveal>
         <h3>Inside Motion Lift. <span>Six tools. One panel.</span></h3>
@@ -505,14 +526,14 @@
         </a>
         <a class="card glass f-card" href="motion-lift.html#pricing">
           <div class="tag"><b class="pro">Pro</b></div>
-          <h4>Presets and CSS</h4><p>Save a lifted ease and put it on any keys. Or copy it as CSS.</p>
+          <h4>Presets</h4><p>Save a lifted ease and put it on any keyframes in one click.</p>
           <div class="art"><svg viewBox="0 0 280 150" fill="none" aria-hidden="true">
             <g stroke="#e5e5ea" stroke-width="1"><path d="M60 10v110M110 10v110M160 10v110M10 40h200M10 80h200"/></g>
             <path d="M10 120C48 120 52 10 210 10" stroke="#ff7a3d" stroke-width="3" stroke-linecap="round"/>
             <g stroke="#aeaeb2" stroke-width="1.5"><path d="M10 120 48 120M210 10 160 10"/></g>
             <g fill="#fff" stroke="#aeaeb2" stroke-width="1.5"><circle cx="48" cy="120" r="5"/><circle cx="160" cy="10" r="5"/></g>
             <g fill="#ff7a3d" stroke="#fff" stroke-width="1.5"><rect x="5" y="115" width="10" height="10" transform="rotate(45 10 120)"/><rect x="205" y="5" width="10" height="10" transform="rotate(45 210 10)"/></g>
-            <text x="10" y="144" fill="#86868b" font-family="ui-monospace, Menlo, monospace" font-size="11">cubic-bezier(0.16, 1, 0.3, 1)</text>
+            <text x="10" y="144" fill="#86868b" font-family="ui-monospace, Menlo, monospace" font-size="11">Preset: Snap in</text>
           </svg></div>
         </a>
       </div>
