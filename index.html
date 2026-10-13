@@ -20,7 +20,9 @@
      looping previews, filter Football / Motion design), Shop (product cards + "Inside Motion Lift" scroller), Contact, footer.
      Served by GitHub Pages from the motion-lift-releases repo; python3 extension/release.py site uploads every top-level
      file in this folder (the work-*.mp4 / .jpg previews too). Motion Lift's own page is motion-lift.html.
-     Add a product: copy a .p-card in #shop (its Buy link = that product's Lemon Squeezy checkout link).
+     Add a product: copy a .p-card in #shop (its Buy link = that product's Lemon Squeezy checkout link). Upload Method (PC)
+     (12 Oct 2026, Callum: "just pc", $8) delivers "Dm me.txt": buyers DM him their receipt for the method.
+     Its Lemon Squeezy product is #1434965 (live, $8, tax category Information Service).
      Add a piece of work: cut a 6-8 s muted preview (720-960 px wide, H.264, faststart) + a poster jpg, copy a .w-tile and set
      data-cat (football | motion), data-src and poster; credit the original creator when it's a remake.
      Motion: motion.js (Lenis + GSAP: data-hero / data-reveal / data-stagger) and the inline script at the bottom (menu,
@@ -187,9 +189,6 @@
   .p-pro .shot { width: min(380px, 78%); height: auto; align-self: flex-start; margin-top: 30px; border-radius: 20px 20px 0 0;
                  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 30px 60px -20px rgba(0,0,0,.35); }
   .p-lite .mark { width: 76px; height: 76px; margin-bottom: 18px; filter: drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
-  .p-soon { justify-content: center; background: rgba(255,255,255,.32); }
-  .p-soon .plus { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: var(--text-1);
-                  font-size: 26px; font-weight: 300; margin-bottom: 18px; box-shadow: 0 6px 16px -8px rgba(0,0,0,.25); }
   .why { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
   .why > div { border-radius: 22px; padding: 22px 22px 24px; font-size: 15px; color: var(--text-2); }
   .why b { display: block; color: var(--text-1); font-size: 17px; margin: 12px 0 4px; letter-spacing: -.01em; }
@@ -435,11 +434,15 @@
           </div>
         </article>
 
-        <article class="card glass p-card p-soon">
-          <div class="plus" aria-hidden="true">+</div>
-          <h3>More tools on the way.</h3>
-          <p>New drops show up on my TikTok first.</p>
-          <div class="actions" style="margin-top:18px"><a class="link" href="https://www.tiktok.com/@footy1x.ae">Follow @footy1x.ae <i aria-hidden="true">›</i></a></div>
+        <article class="card glass p-card p-upload">
+          <div class="tag"><b class="hot">New</b><b>For PC editors</b></div>
+          <h3>Upload Method (PC)</h3>
+          <p>The method I use to upload my edits from PC for 1080p 60 fps quality on TikTok. After you buy, DM me your receipt
+            (<a class="link" href="https://t.me/footy1xae">@footy1xae</a> on Telegram or <a class="link" href="https://www.tiktok.com/@footy1x.ae">@footy1x.ae</a> on TikTok) and I&rsquo;ll send it to you.</p>
+          <div class="price"><b>$8</b>one-time</div>
+          <div class="actions">
+            <a class="cta-btn primary" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/50a3744c-5291-49a5-9044-303cf8233bb0">Buy</a>
+          </div>
         </article>
       </div>
 
@@ -575,7 +578,7 @@
     <div class="note">Motion Lift Pro is $3, one-time, for one computer at a time. Prices in US dollars; taxes are added at checkout where they apply.
       Checkout and receipts are handled by Lemon Squeezy, our reseller.</div>
     <div class="cols">
-      <div><h5>Shop</h5><ul><li><a href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Motion Lift Pro</a></li><li><a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Motion Lift Lite (free)</a></li><li><a href="motion-lift.html#features">What's new in 0.6.1</a></li></ul></div>
+      <div><h5>Shop</h5><ul><li><a href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/c2f73c17-3c95-4aaf-a26b-e0377ede13dd">Motion Lift Pro</a></li><li><a href="https://github.com/footyvfx/motion-lift-releases/releases/latest">Motion Lift Lite (free)</a></li><li><a href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/50a3744c-5291-49a5-9044-303cf8233bb0">Upload Method (PC)</a></li><li><a href="motion-lift.html#features">What's new in 0.6.1</a></li></ul></div>
       <div><h5>Motion Lift</h5><ul><li><a href="motion-lift.html#features">Features</a></li><li><a href="motion-lift.html#pricing">Lite and Pro</a></li><li><a href="motion-lift.html#install">Install</a></li></ul></div>
       <div><h5>Work</h5><ul><li><a href="#work">Football edits</a></li><li><a href="#work">Motion design</a></li><li><a href="https://www.tiktok.com/@footy1x.ae">TikTok</a></li></ul></div>
       <div><h5>Contact</h5><ul><li><a href="mailto:Footy1x.ae@gmail.com">Email</a></li><li><a href="motion-lift.html#support">Support</a></li><li><a href="motion-lift.html#licence">Licence, privacy and refunds</a></li></ul></div>
