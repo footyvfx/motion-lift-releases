@@ -2,7 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- iPhone: Share > Add to Home Screen opens Cutroom full screen like an app -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Cutroom" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#111113" media="(prefers-color-scheme: dark)" />
+  <link rel="apple-touch-icon" href="cutroom-icon.png" />
   <title>Cutroom — a free video editor in your browser · footy1x</title>
   <link rel="canonical" href="https://footy1x.store/cutroom" />
   <meta property="og:title" content="Cutroom — a free video editor in your browser" />
@@ -73,7 +81,7 @@
       <button class="icon-btn" id="btnRedo" data-i="redo" title="Redo (⇧⌘Z)"></button>
       <div class="sep"></div>
       <button class="icon-btn" data-act="theme" data-i="moon" title="Light / dark"></button>
-      <button class="icon-btn" data-act="help" data-i="help" title="Shortcuts (?)"></button>
+      <button class="icon-btn" id="btnHelp" data-act="help" data-i="help" title="Help and shortcuts (?)"></button>
       <button class="icon-btn" id="btnSettings" data-i="gear" title="Project settings"></button>
       <button class="primary" id="btnExport" data-i="export">Export</button>
     </header>
