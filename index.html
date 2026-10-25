@@ -220,6 +220,8 @@
   .p-pro .pro-shot { position: relative; z-index: 1; align-self: center; }
   .p-pro .shot { display: block; height: min(540px, 64vh); width: auto; max-width: none; border-radius: 22px;
                  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 30px 60px -24px rgba(0,0,0,.4); }
+  .p-cutroom .shot { height: auto; width: min(600px, 48vw); border-radius: 16px; }
+  .p-cutroom .ticks span { color: var(--link); }
   .p-lite .mark, .p-upload .mark { width: 76px; height: 76px; margin-bottom: 18px; filter: drop-shadow(0 10px 18px rgba(0,0,0,.18)); }
   .specs { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; }
   .specs li { font-size: 13px; font-weight: 600; line-height: 1; padding: 8px 13px; border-radius: 999px; color: var(--text-1);
@@ -368,11 +370,11 @@
       <svg viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(0,0,0,.1)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg>
       footy1x
     </a>
-    <nav aria-label="Main"><a href="#work">Work</a><a href="#shop">Shop</a><a href="motion-lift.html">Motion Lift</a><a href="#contact">Contact</a></nav>
+    <nav aria-label="Main"><a href="#work">Work</a><a href="#shop">Shop</a><a href="motion-lift.html">Motion Lift</a><a href="cutroom.html">Cutroom</a><a href="#contact">Contact</a></nav>
     <a class="shop-pill" href="#shop">Shop</a>
     <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="gmenu"><span></span><span></span></button>
   </div>
-  <div class="gnav-menu" id="gmenu"><a href="#work">Work</a><a href="#shop">Shop</a><a href="motion-lift.html">Motion Lift</a><a href="#contact">Contact</a></div>
+  <div class="gnav-menu" id="gmenu"><a href="#work">Work</a><a href="#shop">Shop</a><a href="motion-lift.html">Motion Lift</a><a href="cutroom.html">Cutroom</a><a href="#contact">Contact</a></div>
 </header>
 
 <div class="ribbon">New in Motion Lift: Reverse and Lift CC, in beta. <a href="motion-lift.html#features">Learn more <span aria-hidden="true">›</span></a></div>
@@ -505,6 +507,26 @@
           <div class="actions">
             <a class="cta-btn primary" href="https://motionliftbyfooty1x.lemonsqueezy.com/checkout/buy/50a3744c-5291-49a5-9044-303cf8233bb0">Buy</a>
           </div>
+        </article>
+        <article class="card glass p-card p-pro p-cutroom">
+          <div class="pro-copy">
+            <div class="tag"><b class="hot">New</b><b>Free web app</b></div>
+            <h3>Cutroom</h3>
+            <p>A video editor in your browser, built like After Effects. Nothing to install, nothing uploaded.</p>
+            <ul class="ticks">
+              <li>Timeline, layers, text, shapes and adjustment layers</li>
+              <li>65 GPU effects, keyframes and Twixtor-style speed ramps</li>
+              <li>Drop in your .ffx presets: Twixtor, Sapphire, BCC, Magic Bullet too</li>
+              <li>AI Enhance: Topaz-style clean-up, upscaling and face recovery</li>
+              <li>Works on your phone, with a guided tour · MP4 up to 4K</li>
+            </ul>
+            <div class="price"><b>Free</b>on your computer or phone</div>
+            <div class="actions">
+              <a class="cta-btn primary" href="cutroom.html">Open Cutroom</a>
+              <a class="link" href="cutroom.html#demo">Try the demo <i aria-hidden="true">›</i></a>
+            </div>
+          </div>
+          <div class="pro-shot"><img class="shot" src="cutroom-shot.jpg" width="1440" height="900" alt="Cutroom: a 9:16 demo edit open in the browser editor, with layers on the timeline, keyframes, and the Layer panel" loading="lazy"></div>
         </article>
       </div>
 
