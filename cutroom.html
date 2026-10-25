@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cutroom — a free video editor in your browser · footy1x</title>
+  <link rel="canonical" href="https://footy1x.store/cutroom" />
+  <meta property="og:title" content="Cutroom — a free video editor in your browser" />
+  <meta property="og:description" content="Timeline, layers, 65 GPU effects, keyframes, your After Effects presets and MP4 export. By footy1x." />
+  <meta name="description" content="Cutroom by footy1x: edit videos in your browser. Timeline, layers, text, 65 GPU effects, keyframes, After Effects presets (plug-ins included) and MP4 export. Nothing is uploaded." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><rect x='.5' y='.5' width='19' height='19' rx='5.5' fill='%232b2b2b'/><path d='M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9' fill='none' stroke='%23ff7a3d' stroke-width='1.5' stroke-linecap='round'/><circle cx='4.5' cy='14.5' r='1.45' fill='%23b9b9b9'/><circle cx='15.5' cy='5.3' r='1.45' fill='%23ff7a3d'/></svg>" />
+  <script>try { const t = localStorage.getItem('cutroom-theme'); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+  <link rel="stylesheet" href="cutroom.css" />
+</head>
+<body>
+  <!-- Home -->
+  <section id="home" class="home">
+    <header class="home-nav">
+      <div class="wrap">
+        <a class="brand" href="./" title="footy1x.store">
+          <svg class="mark" viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(0,0,0,.1)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg>
+          footy1x <span class="sub">Cutroom</span>
+        </a>
+        <div class="spacer"></div>
+        <a class="navlink" href="./#work">Work</a>
+        <a class="navlink" href="./#shop">Shop</a>
+        <a class="navlink" href="motion-lift.html">Motion Lift</a>
+        <button class="icon-btn" data-act="theme" data-i="moon" title="Light / dark"></button>
+      </div>
+    </header>
+    <div class="wrap">
+      <div class="home-hero">
+        <div class="eyebrow">Free · runs in your browser · nothing uploaded</div>
+        <h1>Edit like it’s After Effects.<br />Right here.</h1>
+        <p>Cutroom is a timeline editor with layers, text, adjustment layers, 65 GPU effects, keyframes with real eases, and your After Effects presets: plug-in ones too. Export MP4 when you’re done.</p>
+        <div class="hero-cta">
+          <button class="primary" data-act="newproj" data-i="plus">New project</button>
+          <button data-act="demo" data-i="sparkle">Open a demo</button>
+        </div>
+        <div class="chips-row">
+          <span class="pill">Timeline &amp; layers</span><span class="pill">Text &amp; shapes</span><span class="pill">Adjustment layers</span>
+          <span class="pill">65 effects</span><span class="pill">Twixtor-style speed ramps</span><span class="pill">.ffx presets</span><span class="pill">MP4 export</span>
+        </div>
+        
+      </div>
+      <div class="row-between" style="margin-top:8px"><h2>Learn Cutroom</h2><button class="small" data-act="learn" data-i="sparkle">All guides</button></div>
+      <div id="learn"></div>
+      <h2 style="margin-top:40px">Start with a canvas</h2>
+      <div class="formats" id="formats"></div>
+      <div class="home-list">
+        <div class="row-between"><h2>Your projects</h2><span class="muted small" id="projCount"></span></div>
+        <div id="projects" class="projects"></div>
+      </div>
+      <footer class="home-foot">Made by <a href="./">footy1x</a> · Projects, media and presets are saved in this browser on this device only. Works best in Chrome, Edge, Arc or Safari 17+.</footer>
+    </div>
+  </section>
+
+  <!-- Editor -->
+  <section id="editor" class="editor hidden">
+    <header class="topbar">
+      <button class="icon-btn" id="btnHome" data-i="back" title="All projects"></button>
+      <a class="brand" href="./" target="_blank" rel="noopener" title="footy1x.store">
+        <svg class="mark" viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg>
+      </a>
+      <div class="proj-title">
+        <input id="projName" class="ghost-input" spellcheck="false" aria-label="Project name" />
+        <span class="muted mono small" id="projMeta" style="padding-left:6px"></span>
+      </div>
+      <div class="spacer"></div>
+      <span class="muted small editor-hide-small" id="saveState"></span>
+      <div class="sep"></div>
+      <button class="icon-btn" id="btnUndo" data-i="undo" title="Undo (⌘Z)"></button>
+      <button class="icon-btn" id="btnRedo" data-i="redo" title="Redo (⇧⌘Z)"></button>
+      <div class="sep"></div>
+      <button class="icon-btn" data-act="theme" data-i="moon" title="Light / dark"></button>
+      <button class="icon-btn" data-act="help" data-i="help" title="Shortcuts (?)"></button>
+      <button class="icon-btn" id="btnSettings" data-i="gear" title="Project settings"></button>
+      <button class="primary" id="btnExport" data-i="export">Export</button>
+    </header>
+
+    <div class="workspace">
+      <aside class="left" id="left"></aside>
+      <main class="viewer" id="viewer">
+        <div class="viewer-tools">
+          <select id="previewScale" title="Preview quality">
+            <option value="auto">Preview: Auto</option><option value="1">Full</option><option value="0.5">Half</option><option value="0.25">Quarter</option>
+          </select>
+          <span class="muted small mono" id="fpsMeter"></span>
+        </div>
+        <div class="stage" id="stage">
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="gl"></canvas>
+            <svg id="overlay" class="overlay"></svg>
+          </div>
+          <div class="empty-stage glass" id="emptyStage">
+            <p class="big">This is your canvas.</p>
+            <p class="muted" style="margin:0">Drop videos, photos or music anywhere, or add a layer.</p>
+            <div class="row"><button class="primary" data-act="import" data-i="upload">Import media</button><button data-act="text" data-i="text">Add text</button></div>
+          </div>
+        </div>
+        <div class="transport">
+          <button class="icon-btn" data-act="start" data-i="start" title="Go to start (Home)"></button>
+          <button class="icon-btn" data-act="prev" data-i="prev" title="Previous frame (←)"></button>
+          <button class="play" id="btnPlay" data-i="play" title="Play (Space)"></button>
+          <button class="icon-btn" data-act="next" data-i="next" title="Next frame (→)"></button>
+          <button class="icon-btn" data-act="end" data-i="end" title="Go to end (End)"></button>
+          <button class="icon-btn" data-act="split" data-i="split" title="Split at playhead (S)"></button>
+          <span class="mono timecode" id="timecode"></span>
+          <label class="loop small muted"><input type="checkbox" id="loop" checked /> Loop</label>
+        </div>
+      </main>
+      <aside class="right" id="right"></aside>
+    </div>
+
+    <div class="resizer" id="tlResizer" title="Drag to resize the timeline"></div>
+    <section class="timeline" id="timeline"></section>
+    <nav class="mtabs" id="mtabs" aria-label="Panels">
+      <button data-m="add" data-i="plus">Add</button>
+      <button data-m="edit" data-i="edit">Edit</button>
+      <button data-m="fx" data-i="wand">Effects</button>
+      <button data-m="pre" data-i="preset">Presets</button>
+      <button data-m="tl" data-i="layers">Timeline</button>
+    </nav>
+  </section>
+
+  <div id="modal" class="modal hidden"></div>
+  <div id="toast" class="toast glass hidden"></div>
+  <div id="dropHint" class="drop-hint hidden">Drop to import</div>
+
+  <script type="module" src="cutroom.js"></script>
+<!-- Cloudflare Web Analytics (same as every footy1x.store page: page views only, no cookies) -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ae19d1f118524552bea4a54e08a238dd"}'></script>
+</body>
+</html>
