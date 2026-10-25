@@ -394,3 +394,41 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
 /* AE-style cache bar under the ruler */
 .ruler .cache-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; pointer-events: none; }
 .ruler .cache-bar > div { position: absolute; top: 0; height: 3px; background: #2fbf4a; border-radius: 1px; }
+
+/* ---------- touch screens: no grey tap flash, no iOS callouts on the timeline, no double-tap zoom on controls ---------- */
+@media (pointer: coarse) {
+  * { -webkit-tap-highlight-color: transparent; }
+  button, .clip, .preset, .pthumb, .learn, .enh-mode, .mtabs button { touch-action: manipulation; }
+  .timeline, .clip, .ruler, .overlay, .tl-head, .viewer { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+  .menu button { min-height: 42px; }
+}
+@media (max-width: 820px) {
+  /* iOS zooms the page into any text field under 16 px: keep them at 16 */
+  input[type=text], input[type=number], input:not([type]), select, textarea, .num-edit, .ghost-input { font-size: 16px !important; }
+  /* notch and home bar */
+  .editor { grid-template-rows: calc(50px + env(safe-area-inset-top)) minmax(180px, 42vh) minmax(0, 1fr) calc(58px + env(safe-area-inset-bottom)); }
+  .topbar { padding-top: env(safe-area-inset-top); padding-left: max(6px, env(safe-area-inset-left)); padding-right: max(6px, env(safe-area-inset-right)); }
+  .home-nav { padding-top: env(safe-area-inset-top); }
+  .home-nav .wrap { gap: 12px; }
+  .home-nav .brand .sub, .home-nav a.navlink[href$="motion-lift.html"] { display: none; }
+  .menu { max-height: calc(100dvh - 24px); overflow: auto; min-width: 220px; }
+  /* dialogs become bottom sheets */
+  .modal { place-items: end center; }
+  .dialog, .dialog.wide { width: 100%; max-width: 100%; max-height: 92dvh; border-radius: 22px 22px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); animation: sheet .28s cubic-bezier(.2,.9,.3,1); }
+  .dialog .actions { position: sticky; bottom: calc(-18px - env(safe-area-inset-bottom)); margin: 0 -16px calc(-18px - env(safe-area-inset-bottom)); padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--glass-2); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .dialog .actions button { flex: 1; height: 44px; }
+  .enh-preview { max-height: 38vh; }
+  .enh-slider input { height: 28px; }
+}
+@keyframes sheet { from { transform: translateY(40px); opacity: 0; } }
+/* AI Enhance: starting looks, full-screen compare */
+.enh-looks { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.enh-looks .chip { border: 1px solid var(--line2); display: inline-flex; align-items: center; gap: 4px; }
+.enh-preview { cursor: ew-resize; touch-action: none; }
+.enh-prev-wrap.big { position: fixed; inset: 0; z-index: 90; background: #000; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); grid-template-rows: 1fr auto; }
+.enh-prev-wrap.big .enh-preview { max-height: none; height: 100%; border-radius: 0; }
+.enh-prev-wrap.big .enh-split { margin: 8px 16px 14px; width: auto; }
+@media (pointer: coarse) { .menu .k { display: none; } }
+.enh-big-hint { display: none; }
+.enh-prev-wrap.big .enh-big-hint { display: block; position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); color: #fff; font-size: 12px; background: rgba(0,0,0,.5); padding: 5px 12px; border-radius: 99px; pointer-events: none; }
