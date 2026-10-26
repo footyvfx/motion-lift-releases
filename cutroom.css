@@ -229,7 +229,8 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
 .tl-main { display: grid; grid-template-columns: 210px 1fr; min-height: 0; }
 .tl-heads { overflow: hidden; border-right: 1px solid var(--line); position: relative; }
 .tl-heads-inner { position: relative; }
-.tl-head { height: 36px; display: flex; align-items: center; gap: 4px; padding: 0 6px 0 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
+:root { --row: 36px; } /* timeline row height: the layer names, the tracks and timeline.js all use this one value */
+.tl-head { height: var(--row); display: flex; align-items: center; gap: 4px; padding: 0 6px 0 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
 .tl-head:hover { background: var(--hover); }
 .tl-head.sel { background: var(--accent-soft); }
 .tl-head .nm { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; display: flex; align-items: center; gap: 6px; }
@@ -245,7 +246,7 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
 .ruler .lab { position: absolute; top: 4px; font-size: 10px; color: var(--muted); transform: translateX(4px); font-family: var(--mono); }
 .ruler .marker { position: absolute; top: 13px; width: 11px; height: 12px; margin-left: -5.5px; background: var(--accent); clip-path: polygon(0 0, 100% 0, 100% 55%, 50% 100%, 0 55%); cursor: pointer; }
 .heads-spacer { height: 26px; border-bottom: 1px solid var(--line); background: var(--glass-2); position: sticky; top: 0; z-index: 2; display: flex; align-items: center; padding: 0 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
-.track { position: relative; height: 36px; border-bottom: 1px solid var(--line); }
+.track { position: relative; height: var(--row); border-bottom: 1px solid var(--line); }
 .track.sel { background: var(--accent-soft); }
 .clip { position: absolute; top: 4px; height: 28px; border-radius: 8px; background: var(--c, #555); border: 1px solid rgba(0,0,0,.12); overflow: hidden; cursor: grab; display: flex; align-items: center; color: #fff; font-size: 11px; font-weight: 500; user-select: none;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 1px 2px rgba(0,0,0,.12); }
@@ -256,7 +257,7 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
 .clip .trim { position: absolute; top: 0; bottom: 0; width: 8px; cursor: ew-resize; z-index: 2; }
 .clip .trim.l { left: 0; } .clip .trim.r { right: 0; }
 .clip .trim:hover { background: rgba(255,255,255,.4); }
-.clip .kd { position: absolute; bottom: 2px; width: 8px; height: 8px; margin-left: -4px; background: #fff; border: 1.5px solid var(--key); transform: rotate(45deg); z-index: 1; cursor: ew-resize; border-radius: 1px; }
+.clip .kd { position: absolute; bottom: 2px; width: 8px; height: 8px; margin-left: -4px; background: #fff; border: 1.5px solid var(--key); transform: rotate(45deg); z-index: 3; /* above the trim handles, so a key at the clip start can be grabbed */ cursor: ew-resize; border-radius: 1px; }
 .clip .kd::after { content: ''; position: absolute; inset: -4px; } /* easier to grab */
 .clip .ramp { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); z-index: 1; opacity: .9; }
 .playhead { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--play); z-index: 4; pointer-events: none; }
@@ -376,7 +377,7 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
   .tl-bar b, #tlCount, .tl-bar input[type=range] { display: none; }
   .tl-main { grid-template-columns: 104px 1fr; }
   .tl-head .grip, .tl-head .sw { display: none; }
-  .track, .tl-head { height: 44px; }
+  :root { --row: 44px; }
   .clip { top: 5px; height: 34px; }
   .clip .trim { width: 14px; }
   .add-grid button { padding: 12px 10px; }
@@ -454,3 +455,52 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
   .clip .kd { width: 11px; height: 11px; margin-left: -5.5px; bottom: 3px; touch-action: none; }
   .clip .kd::after { inset: -10px; }
 }
+/* keyframe rows (a layer twirled open): one row per animated property */
+.tl-head .twirl { width: 20px; height: 20px; padding: 0; color: var(--muted); }
+.tl-head .twirl.on { color: var(--accent); }
+.tl-head .twirl-gap { width: 20px; flex: none; }
+.tl-head.prop { padding-left: 30px; font-size: 11px; color: var(--muted); background: color-mix(in srgb, var(--hover) 50%, transparent); }
+.tl-head.prop .nm { font-size: 11px; }
+.track.prop { background: color-mix(in srgb, var(--hover) 50%, transparent); }
+.track.prop .prop-span { position: absolute; top: 50%; height: 2px; margin-top: -1px; background: var(--line2); border-radius: 1px; }
+.track .pk { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; background: var(--key); border: 1.5px solid #fff; transform: rotate(45deg); border-radius: 1.5px; cursor: ew-resize; z-index: 2; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+.track .pk::after { content: ''; position: absolute; inset: -6px; }
+.track .pk.lin { border-radius: 0; }
+.track .pk.hold { transform: none; border-radius: 1px; width: 9px; }
+@media (pointer: coarse) {
+  .track .pk { width: 14px; height: 14px; margin: -7px 0 0 -7px; touch-action: none; }
+  .track .pk::after { inset: -12px; }
+  .tl-head .twirl { width: 32px; height: 32px; }
+  .tl-head .twirl-gap { width: 32px; }
+}
+
+/* ---------- phones: every control at least ~44 px (Apple's minimum comfortable touch target) ---------- */
+@media (max-width: 820px), (pointer: coarse) and (max-height: 500px) {
+  .topbar .icon-btn { width: 42px; height: 42px; flex: none; }
+  .proj-title { flex: 1; min-width: 0; }
+  .ghost-input { width: 100% !important; min-width: 0; }
+  .topbar .spacer { display: none; }
+  .transport .icon-btn { width: 44px; height: 44px; }
+  .transport .play { width: 50px; height: 50px; }
+  .tl-bar button.small { min-height: 38px; padding: 0 12px; font-size: 13px; }
+  .tl-main { grid-template-columns: 136px 1fr; }
+  .tl-head .nm .ic { display: none; }
+  .tl-head .icon-btn { width: 32px; height: 32px; flex: none; }
+  .tl-head .nm { font-size: 13px; }
+  .tl-head.prop { padding-left: 34px; }
+  .prop { min-height: 50px; }
+  .kf { width: 40px; height: 40px; }
+  .num { min-height: 40px; padding: 8px 10px; display: inline-flex; align-items: center; }
+  .icon-btn.sm { width: 38px; height: 38px; }
+  .fx-head { min-height: 52px; gap: 10px; }
+  .fx-head input[type=checkbox] { width: 22px; height: 22px; }
+  .fx-more { width: 44px; height: 44px; flex: none; }
+  select { min-height: 40px; }
+  button.small { min-height: 38px; }
+  .ease-row { gap: 8px; }
+  .ease-row select { min-height: 38px; max-width: none; font-size: 15px !important; }
+  .more-toggle { width: 100%; min-height: 48px; justify-content: flex-start; gap: 8px; margin: 6px 0 12px; border-radius: 12px; font-size: 14px; }
+  .add-grid button { min-height: 64px; }
+  .mtabs button { min-height: 50px; }
+}
+@media (min-width: 821px) { .more-toggle { display: none; } }
