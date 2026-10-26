@@ -504,3 +504,44 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
   .mtabs button { min-height: 50px; }
 }
 @media (min-width: 821px) { .more-toggle { display: none; } }
+
+/* ---------- motion polish (26 Oct 2026): things that appear move in, things you touch answer back ---------- */
+.menu { animation: menuIn .14s cubic-bezier(.2,.9,.3,1); transform-origin: top left; }
+@keyframes menuIn { from { opacity: 0; transform: scale(.94) translateY(-4px); } }
+@media (min-width: 821px) { .dialog { animation: pop .24s cubic-bezier(.2,.9,.3,1.15); } } /* phones keep the bottom-sheet slide */
+.fx-card, .preset { animation: cardIn .22s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(6px); } }
+.preset { transition: transform .18s cubic-bezier(.2,.8,.2,1), box-shadow .18s, border-color .18s; }
+.preset:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.preset .pthumb { transition: transform .25s cubic-bezier(.2,.8,.2,1); }
+.preset .pthumb.playing { transform: scale(1.02); }
+.preset .pthumb.playing::after { content: "Preview"; background: var(--glass-2); color: var(--text); }
+.chip { transition: background .15s, color .15s, border-color .15s, transform .12s; }
+.chip:active { transform: scale(.95); }
+.pk, .clip .kd { transition: transform .12s cubic-bezier(.2,.9,.3,1.4); }
+.pk:hover, .clip .kd:hover { transform: rotate(45deg) scale(1.3); }
+.pk.custom { background: #b07cff; }
+.twirl svg { transition: transform .18s cubic-bezier(.2,.8,.2,1); }
+.tl-head.prop, .track.prop { animation: fade .18s ease-out; }
+.toast { animation: rise .3s cubic-bezier(.2,.9,.3,1.25); }
+
+/* ease (graph) editor */
+.ease-edit { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 16px; align-items: start; }
+.ease-graph { width: 100%; max-width: 260px; aspect-ratio: 1; touch-action: none; background: var(--hover); border-radius: 14px; }
+.eg-box { fill: none; stroke: var(--line2); stroke-dasharray: 3 4; }
+.eg-diag { stroke: var(--line2); }
+.eg-arm { stroke: var(--muted); stroke-width: 1.5; }
+.eg-curve { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; }
+.eg-handle { fill: var(--solid); stroke: var(--accent); stroke-width: 3; cursor: grab; }
+.eg-handle:active { cursor: grabbing; }
+.eg-side { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.eg-track { position: relative; height: 18px; border-radius: 99px; background: var(--hover); }
+.eg-dot { position: absolute; top: 0; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 50%, transparent); }
+.eg-code { word-break: break-all; }
+.eg-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.eg-chips .chip.on { background: var(--accent); color: var(--accent-ink); }
+@media (max-width: 560px) { .ease-edit { grid-template-columns: 1fr; justify-items: center; } .eg-side { width: 100%; } .eg-handle { r: 12; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
