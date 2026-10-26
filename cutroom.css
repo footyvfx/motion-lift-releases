@@ -256,7 +256,8 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
 .clip .trim { position: absolute; top: 0; bottom: 0; width: 8px; cursor: ew-resize; z-index: 2; }
 .clip .trim.l { left: 0; } .clip .trim.r { right: 0; }
 .clip .trim:hover { background: rgba(255,255,255,.4); }
-.clip .kd { position: absolute; bottom: 2px; width: 8px; height: 8px; margin-left: -4px; background: #fff; border: 1.5px solid var(--key); transform: rotate(45deg); z-index: 1; cursor: pointer; border-radius: 1px; }
+.clip .kd { position: absolute; bottom: 2px; width: 8px; height: 8px; margin-left: -4px; background: #fff; border: 1.5px solid var(--key); transform: rotate(45deg); z-index: 1; cursor: ew-resize; border-radius: 1px; }
+.clip .kd::after { content: ''; position: absolute; inset: -4px; } /* easier to grab */
 .clip .ramp { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); z-index: 1; opacity: .9; }
 .playhead { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--play); z-index: 4; pointer-events: none; }
 .playhead::before { content: ''; position: absolute; top: 2px; left: -6px; width: 14px; height: 13px; background: var(--play); border-radius: 3px 3px 7px 7px; }
@@ -447,4 +448,9 @@ textarea.text-content { width: 100%; min-height: 64px; resize: vertical; }
   .mtabs { grid-row: 3; }
   .mtabs button { flex-direction: row; gap: 6px; font-size: 12px; }
   .dialog, .dialog.wide { max-height: 96dvh; }
+}
+/* fingers: bigger keyframe diamonds with a wide grab area */
+@media (pointer: coarse) {
+  .clip .kd { width: 11px; height: 11px; margin-left: -5.5px; bottom: 3px; touch-action: none; }
+  .clip .kd::after { inset: -10px; }
 }
