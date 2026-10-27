@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Footy Tools · footy1x</title>
+<meta name="description" content="Footy Tools: a free After Effects panel with 188 tools for editors. Velocity ramps, shakes, transitions, beat sync, colour, text, SFX and more, one click each. Updates itself.">
+<meta name="theme-color" content="#f5f5f7">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://footy1x.store/footytools.html">
+<meta property="og:title" content="Footy Tools: every tool an editor reaches for, in one free panel">
+<meta property="og:description" content="A free After Effects panel: velocity ramps, shakes, transitions, beat sync, colour, text, SFX and more. Updates itself.">
+<meta property="og:image" content="https://footy1x.store/footytools-logo.jpg">
+<meta name="twitter:card" content="summary">
+<!-- Footy Tools' download page. Source: scripts/footytools/site/ (NOT scripts/motionlift/site/, whose `release.py site`
+     uploads every file there). scripts/footytools/release.py --publish uploads this page, its three screenshots and the
+     logo to the site root, the signed ZXP to footytools/FootyTools.zxp (always the latest) and footytools/latest.json
+     (what installed panels check once a day). Same nav, palette and footer as motion-lift.html; no motion.js. -->
+<style>
+  :root {
+    --bg: #f5f5f7; --surface: rgba(255,255,255,.62); --surface-2: #ffffff; --line: rgba(0,0,0,.08); --line-2: rgba(0,0,0,.14);
+    --text-1: #1d1d1f; --text-2: #6e6e73; --text-3: #86868b; --accent: #ff7a3d; --accent-ink: #220f05; --accent-soft: rgba(255,122,61,.14);
+    --link: #c4501a; --orange-text: #f26419; --pitch: #1f9d57; --blur: blur(28px) saturate(180%);
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text-1); font: 16px/1.6 var(--font); overflow-x: clip; -webkit-font-smoothing: antialiased; }
+  body::before { content: ""; position: fixed; inset: -10vh -10vw; z-index: -1; pointer-events: none;
+    background: radial-gradient(40% 36% at 88% 8%, rgba(255,122,61,.22), transparent 70%),
+                radial-gradient(36% 32% at 6% 40%, rgba(31,157,87,.12), transparent 70%),
+                radial-gradient(40% 36% at 74% 94%, rgba(255,170,90,.16), transparent 70%); }
+  a { color: var(--link); text-underline-offset: 3px; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: clamp(34px, 5vw, 54px); line-height: 1.05; letter-spacing: -.03em; margin: 0 0 18px; }
+  h1 em { font-style: normal; color: var(--orange-text); }
+  h2 { font-size: 28px; letter-spacing: -.02em; margin: 0 0 10px; }
+  h3 { font-size: 17px; margin: 0 0 6px; }
+  .lede { font-size: 18px; color: var(--text-2); margin: 0 0 28px; max-width: 36em; }
+  section { padding: 64px 0; border-top: 1px solid var(--line); }
+  section > .lede { margin-bottom: 30px; }
+  section { scroll-margin-top: 56px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 22px; border-radius: 999px; font-weight: 600; font-size: 15px; text-decoration: none; }
+  .btn svg { width: 16px; height: 16px; }
+  .btn-accent { background: var(--accent); color: var(--accent-ink); box-shadow: 0 8px 20px -10px rgba(255,122,61,.8); }
+  .btn-accent:hover { background: #ff8b55; }
+  .btn-ghost { color: var(--text-1); background: rgba(255,255,255,.7); box-shadow: inset 0 0 0 1px var(--line-2); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
+  .btn-ghost:hover { background: #fff; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .fine { font-size: 13px; color: var(--text-3); margin: 14px 0 0; }
+  .glass { background: var(--surface); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.8); box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 12px 32px -14px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.95); }
+
+  /* hero */
+  .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; padding: 40px 0 72px; }
+  .badge { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px; font-size: 13px; font-weight: 600; color: var(--text-2); }
+  .badge img { width: 40px; height: 40px; border-radius: 11px; box-shadow: 0 0 0 1px var(--line-2), 0 6px 16px -6px rgba(0,0,0,.35); }
+  .badge b { color: var(--pitch); background: rgba(31,157,87,.12); padding: 3px 9px; border-radius: 999px; font-size: 12px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 26px; margin: 30px 0 0; }
+  .stats div { font-size: 13px; color: var(--text-3); }
+  .stats b { display: block; font-size: 28px; letter-spacing: -.02em; color: var(--text-1); font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .shot { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; border-radius: 20px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 40px 80px -24px rgba(0,0,0,.45); }
+
+  /* screenshots */
+  .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .shots figure { margin: 0; }
+  .shots img { display: block; width: 100%; height: auto; border-radius: 16px; box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 24px 50px -24px rgba(0,0,0,.4); }
+  .shots figcaption { font-size: 14px; color: var(--text-2); margin-top: 12px; }
+  .shots figcaption b { color: var(--text-1); }
+
+  /* tabs */
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .tab { padding: 20px; }
+  .tab h3 { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .tab h3 span { font-size: 12px; font-weight: 600; color: var(--text-3); white-space: nowrap; }
+  .tab p { color: var(--text-2); margin: 0; font-size: 15px; }
+
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; counter-reset: s; }
+  .step { padding: 20px; }
+  .step::before { counter-increment: s; content: counter(s); display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent-soft); color: var(--link); font-weight: 650; font-size: 14px; margin-bottom: 10px; }
+  .step p { color: var(--text-2); margin: 0; font-size: 15px; }
+  .update { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .update .glass { padding: 22px; }
+  .update p { color: var(--text-2); margin: 0; font-size: 15px; }
+  code { font: 14px ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; color: var(--text-1); }
+  details.more { margin-top: 24px; border-radius: 16px; padding: 14px 18px; background: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px var(--line); }
+  details.more summary { cursor: pointer; font-weight: 600; }
+  details.more p { color: var(--text-2); margin: 12px 0 0; }
+  details.more pre { margin: 8px 0 0; max-width: 100%; overflow-x: auto; background: var(--surface-2); border-radius: 10px; padding: 10px 12px; }
+  details.more pre code { background: none; padding: 0; font-size: 12.5px; white-space: pre; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 40px; }
+  .cols p, .cols li { color: var(--text-2); }
+  ul { padding-left: 20px; margin: 0; }
+  li { margin: 6px 0; }
+
+  /* nav + footer (same as motion-lift.html) */
+  .gnav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.66); border-bottom: 1px solid var(--line);
+          -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); }
+  .gnav .gwrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; display: flex; align-items: center; height: 48px; gap: 20px; }
+  .gbrand { display: flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 600; font-size: 16px; letter-spacing: -.01em; color: var(--text-1); }
+  .gbrand svg { width: 22px; height: 22px; }
+  .gnav nav { display: flex; gap: 30px; margin: 0 auto; }
+  .gnav nav a { font-size: 13px; color: var(--text-1); opacity: .8; text-decoration: none; }
+  .gnav nav a:hover, .gnav nav a[aria-current] { opacity: 1; }
+  .shop-pill { display: inline-flex; align-items: center; height: 28px; padding: 0 14px; border-radius: 999px; background: var(--accent);
+               color: var(--accent-ink); font-size: 13px; font-weight: 600; text-decoration: none; }
+  .menu-btn { display: none; width: 36px; height: 36px; border: 0; background: none; color: var(--text-1); cursor: pointer; padding: 0; }
+  .menu-btn span { display: block; width: 18px; height: 1.5px; background: currentColor; margin: 5px auto; transition: transform .25s ease; }
+  .gnav.open .menu-btn span:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .gnav.open .menu-btn span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+  .gnav-menu { display: none; }
+  .pnav { display: flex; align-items: center; gap: 20px; min-height: 54px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  .pn-title { font-size: 21px; font-weight: 650; letter-spacing: -.015em; color: var(--text-1); text-decoration: none; }
+  .pnav nav { margin-left: auto; display: flex; gap: 22px; font-size: 12px; }
+  .pnav nav a { color: var(--text-2); text-decoration: none; }
+  .pnav nav a:hover { color: var(--text-1); }
+  .pn-buy { display: inline-flex; align-items: center; height: 28px; padding: 0 13px; border-radius: 999px; background: var(--accent); color: var(--accent-ink);
+            font-size: 12px; font-weight: 600; text-decoration: none; }
+  .gfoot { margin-top: 40px; background: rgba(255,255,255,.45); border-top: 1px solid var(--line); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+           color: var(--text-2); font-size: 12px; line-height: 1.6; }
+  .gfoot .gwrap { max-width: 1120px; margin: 0 auto; padding: 34px 22px 26px; }
+  .gfoot .note { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .gfoot .fcols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .gfoot h5 { margin: 0 0 8px; color: var(--text-1); font-size: 12px; font-weight: 600; }
+  .gfoot ul { list-style: none; margin: 0; padding: 0; }
+  .gfoot li { margin: 6px 0; }
+  .gfoot a { color: var(--text-2); text-decoration: none; }
+  .gfoot a:hover { color: var(--text-1); text-decoration: underline; }
+  .gfoot .legal { padding-top: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }
+
+  @media (max-width: 860px) {
+    .pnav nav { display: none; } .pn-buy { margin-left: auto; }
+    .tabs { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 16px; }
+    .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 16px; }
+    .shots, .tabs, .steps, .update, .cols { grid-template-columns: 1fr; }
+    .shots figure:nth-child(n+2) { display: none; }
+    .gnav nav, .gnav .shop-pill { display: none; }
+    .menu-btn { display: block; margin-left: auto; }
+    .gnav.open .gnav-menu { display: block; position: absolute; left: 0; right: 0; top: 48px; background: #fff; padding: 12px 22px 26px;
+                            border-bottom: 1px solid var(--line); box-shadow: 0 30px 60px -20px rgba(0,0,0,.25); }
+    .gnav-menu a { display: block; font-size: 26px; font-weight: 600; letter-spacing: -.02em; text-decoration: none; padding: 8px 0; color: var(--text-1); }
+    .gfoot .fcols { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body id="top">
+<header class="gnav">
+  <div class="gwrap">
+    <a class="gbrand" href="./" aria-label="footy1x home"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x=".5" y=".5" width="19" height="19" rx="5.5" fill="#2b2b2b" stroke="rgba(0,0,0,.1)"/><path d="M4.5 14.5H6C9.2 14.5 9.6 4.4 13.2 4.4c1.3 0 1.6.9 2.3.9" fill="none" stroke="#ff7a3d" stroke-width="1.5" stroke-linecap="round"/><circle cx="4.5" cy="14.5" r="1.45" fill="#b9b9b9"/><circle cx="15.5" cy="5.3" r="1.45" fill="#ff7a3d"/></svg> footy1x</a>
+    <nav aria-label="Main"><a href="./#work">Work</a><a href="./#shop">Shop</a><a href="motion-lift.html">Motion Lift</a><a href="footytools.html" aria-current="page">Footy Tools</a><a href="cutroom.html">Cutroom</a><a href="./#contact">Contact</a></nav>
+    <a class="shop-pill" href="./#shop">Shop</a>
+    <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="gmenu"><span></span><span></span></button>
+  </div>
+  <div class="gnav-menu" id="gmenu"><a href="./#work">Work</a><a href="./#shop">Shop</a><a href="motion-lift.html">Motion Lift</a><a href="footytools.html">Footy Tools</a><a href="cutroom.html">Cutroom</a><a href="./#contact">Contact</a></div>
+</header>
+
+<div class="wrap">
+  <header class="pnav">
+    <a class="pn-title" href="#top">Footy Tools</a>
+    <nav aria-label="Footy Tools"><a href="#look">Look inside</a><a href="#tools">Tools</a><a href="#install">Install</a><a href="#updates">Updates</a><a href="#privacy">Privacy</a><a href="#support">Support</a></nav>
+    <a class="pn-buy" href="footytools/FootyTools.zxp" download>Download</a>
+  </header>
+
+  <div class="hero">
+    <div>
+      <div class="badge"><img src="footytools-logo.jpg" width="40" height="40" alt=""> Footy Tools <b>Free</b></div>
+      <h1>Every tool an editor reaches for. <em>One&nbsp;panel.</em></h1>
+      <p class="lede">Velocity ramps, impact shakes, transitions on the cut, beat sync, auto captions, one-layer colour, text, your SFX and presets. Select a layer,
+        click a button, and it's one undo step. Made for football edits, useful for any After Effects edit.</p>
+      <div class="cta">
+        <a class="btn btn-accent" href="footytools/FootyTools.zxp" download><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8.5M4.5 7.5 8 11l3.5-3.5M3 13.5h10"/></svg>Download free</a>
+        <a class="btn btn-ghost" href="#install">How to install</a>
+      </div>
+      <p class="fine">Version 1.1.5 · After Effects 2022 or later · built and tested on Mac (Windows isn't tested yet) · updates itself</p>
+      <div class="stats">
+        <div><b>188</b>tools</div>
+        <div><b>406</b>buttons</div>
+        <div><b>13</b>tabs</div>
+        <div><b>1</b>undo per click</div>
+      </div>
+    </div>
+    <img class="shot" src="footytools-panel.jpg" width="390" height="735" alt="The Footy Tools panel on its Speed tab: velocity ramp settings, freeze, rewind, constant speed and smoothness buttons">
+  </div>
+
+  <section id="look">
+    <h2>Look inside</h2>
+    <p class="lede">A rail of tabs down the side, sections that fold away, and a search that finds any tool. Right-click a tool to star it into
+      Favourites, next to the ones you used last.</p>
+    <div class="shots">
+      <figure><img src="footytools-ease.jpg" width="390" height="735" alt="The Ease tab: a curve editor with handles, presets and Apply to keys" loading="lazy">
+        <figcaption><b>Ease.</b> Drag the curve or pick a preset, select keys, Apply. It can read the ease off keys too.</figcaption></figure>
+      <figure><img src="footytools-panel.jpg" width="390" height="735" alt="The Speed tab with velocity ramp settings" loading="lazy">
+        <figcaption><b>Speed.</b> Put the playhead on the kick, click Velocity. The frame you're on stays where it is.</figcaption></figure>
+      <figure><img src="footytools-library.jpg" width="390" height="735" alt="The Library tab listing SFX, presets and scripts from your folders" loading="lazy">
+        <figcaption><b>Library.</b> Your SFX, presets and scripts. Hear a whoosh, then drop it on every cut at once.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="tools">
+    <h2>What's in it</h2>
+    <p class="lede">Everything Footy Tools adds is named "FT ..." so you can always find it, and every click is one Cmd+Z.</p>
+    <div class="tabs">
+      <div class="tab glass"><h3>Speed <span>Velocity</span></h3><p>Velocity ramps on Time Remap (velocity, slow-mo hit, slow down, speed up, burst), freeze, rewind, reverse, constant speed, Pixel Motion + motion blur in one click, Twixtor and RSMB when you have them.</p></div>
+      <div class="tab glass"><h3>Beat <span>Sync</span></h3><p>Tap tempo, BPM markers, detect beats from your song, then a flash, shake, zoom, blur, velocity or freeze on every beat, or a bass zoom that follows the song. Cut at markers and drop clips onto beats.</p></div>
+      <div class="tab glass"><h3>Transitions <span>21</span></h3><p>Zoom in, out and in + out, four whips, spins, roll, stretch, flash, warp flash, dips, blur dip, smear, glitch and shake on the cut, or one on every cut at once.</p></div>
+      <div class="tab glass"><h3>Animate <span>24 moves</span></h3><p>Ins and outs on any curve, punch-in, smooth zoom, Ken Burns, six shake styles, handheld, flashes, exposure hits and speed blur.</p></div>
+      <div class="tab glass"><h3>Ease <span>Curves</span></h3><p>A curve editor with 14 presets and your own, quick eases, reverse, boomerang, nudge, stretch, stagger, clone keys to the playhead, key colours.</p></div>
+      <div class="tab glass"><h3>Colour <span>One layer</span></h3><p>One FT CC adjustment layer with 15 live sliders and 12 looks with a strength slider. Before/after in one click.</p></div>
+      <div class="tab glass"><h3>Text <span>Captions</span></h3><p>Auto captions that listen to your clip (on your computer), phrase by phrase or word by word. SRT files, 17 text animations, fades, After Effects' 300 text presets, titles, a scorebug and count-ups.</p></div>
+      <div class="tab glass"><h3>Layers <span>Editing</span></h3><p>Slip, ripple delete, close gaps, trims, replace footage keeping everything, precompose each, grid and split screen, a 3D depth stack, masks, audio, selection sets.</p></div>
+      <div class="tab glass"><h3>Library <span>Yours</span></h3><p>Your SFX (on every marker, transition or cut at once), overlays and footage, .ffx presets, scripts, and any After Effects menu command by name.</p></div>
+      <div class="tab glass"><h3>FX <span>Looks</span></h3><p>22 looks, hits at the playhead, RGB split, outline, letterbox, a button for each plug-in you have, and a search of every effect installed.</p></div>
+      <div class="tab glass"><h3>Expressions <span>Library</span></h3><p>Wiggle, jitter, float, pulse, bounce, squash, follow, loops, look-at, orbit and your own, with sliders. Bake to keys and find broken ones.</p></div>
+      <div class="tab glass"><h3>Render &amp; project <span>Export</span></h3><p>Queue with any template, TikTok/4:5/YouTube comps, 9:16 with a blurred background, a background render you can keep editing over, and project clean-up.</p></div>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Install</h2>
+    <p class="lede">Footy Tools is a signed .zxp: the standard way After Effects extensions are installed. Takes a minute.</p>
+    <div class="steps">
+      <div class="step glass"><h3>Download</h3><p>Get <a href="footytools/FootyTools.zxp" download><code>FootyTools.zxp</code></a>. It's always the newest version.</p></div>
+      <div class="step glass"><h3>Get a ZXP installer</h3><p>Free: <a href="https://aescripts.com/learn/post/zxp-installer">aescripts ZXP/UXP Installer</a> or <a href="https://install.anastasiy.com/">Anastasiy's Extension Manager</a>.</p></div>
+      <div class="step glass"><h3>Install</h3><p>Quit After Effects. Drag the .zxp onto the installer's window and wait until it says it's done.</p></div>
+      <div class="step glass"><h3>Open it</h3><p>Start After Effects, then <strong>Window &gt; Extensions &gt; Footy Tools</strong>. Dock it next to your timeline.</p></div>
+    </div>
+    <details class="more">
+      <summary>No installer app? Use Adobe's own installer</summary>
+      <p>Creative Cloud comes with a command-line installer. Put the .zxp in your Downloads folder, run the line for your computer, then restart After Effects.</p>
+      <p><strong>Mac</strong>, in Terminal (one line):</p>
+      <pre><code>"/Library/Application Support/Adobe/Adobe Desktop Common/RemoteComponents/UPI/UnifiedPluginInstallerAgent/UnifiedPluginInstallerAgent.app/Contents/MacOS/UnifiedPluginInstallerAgent" --install ~/Downloads/FootyTools.zxp</code></pre>
+      <p><strong>Windows</strong>, in Command Prompt (one line):</p>
+      <pre><code>"C:\Program Files\Common Files\Adobe\Adobe Desktop Common\RemoteComponents\UPI\UnifiedPluginInstallerAgent\UnifiedPluginInstallerAgent.exe" /install "%USERPROFILE%\Downloads\FootyTools.zxp"</code></pre>
+    </details>
+  </section>
+
+  <section id="updates">
+    <h2>It updates itself</h2>
+    <p class="lede">Once a day the panel asks footy1x.store whether there's a new version. When there is, a green dot appears on its update button.</p>
+    <div class="update">
+      <div class="glass"><h3>One click, no restart</h3><p>Click <strong>Update</strong>: the new version swaps in and the panel reloads in place, without restarting After Effects. <strong>What's new</strong> shows what changed, and <strong>Go back</strong> returns to the version you had.</p></div>
+      <div class="glass"><h3>Signed, so it's really from us</h3><p>Every update is signed. The panel checks the signature and the file's fingerprint before installing, and refuses anything else. On Windows, or if it was installed for all users, it tells you to download the new version instead.</p></div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <h2>Free, private, yours to use</h2>
+    <div class="cols">
+      <div>
+        <h3>Free</h3>
+        <ul>
+          <li>Footy Tools is free for personal and commercial edits. No account, no key.</li>
+          <li>Please link people to this page instead of sharing the file, and don't sell or re-upload it.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What the panel sends</h3>
+        <ul>
+          <li>Once a day: a request for the latest version number, to footy1x.store.</li>
+          <li>Nothing else. Your footage, projects and keyframes never leave your computer, and the panel has no tracking or analytics.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>This website</h3>
+        <p>footy1x.store counts page views with Cloudflare Web Analytics. It sets no cookies and doesn't follow individual visitors.</p>
+      </div>
+      <div>
+        <h3>Requirements</h3>
+        <p>After Effects 2022 (22.0) or later. Built and tested on Mac. It should work on Windows, but it hasn't been tested there yet: tell us if something doesn't.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="support">
+    <h2>Support</h2>
+    <p class="lede" style="margin:0">A bug, a tool you want, or it won't show up: <a href="mailto:Footy1x.ae@gmail.com">Footy1x.ae@gmail.com</a>. Say which
+      After Effects version you're on and whether it's a Mac or a PC. If it isn't under Window &gt; Extensions after installing, quit After Effects
+      completely and open it again.</p>
+  </section>
+</div>
+
+<footer class="gfoot">
+  <div class="gwrap">
+    <div class="note">Footy Tools is free. Motion Lift Pro is $3, one-time; checkout and receipts for it are handled by Lemon Squeezy, our reseller.</div>
+    <div class="fcols">
+      <div><h5>Shop</h5><ul><li><a href="footytools/FootyTools.zxp" download>Footy Tools (free)</a></li><li><a href="motion-lift.html">Motion Lift</a></li><li><a href="cutroom.html">Cutroom</a></li></ul></div>
+      <div><h5>Footy Tools</h5><ul><li><a href="#tools">Tools</a></li><li><a href="#install">Install</a></li><li><a href="#updates">Updates</a></li></ul></div>
+      <div><h5>Work</h5><ul><li><a href="./#work">Football edits</a></li><li><a href="./#work">Motion design</a></li><li><a href="https://www.tiktok.com/@footy1x.ae">TikTok</a></li></ul></div>
+      <div><h5>Contact</h5><ul><li><a href="mailto:Footy1x.ae@gmail.com">Email</a></li><li><a href="#support">Support</a></li><li><a href="#privacy">Privacy</a></li></ul></div>
+    </div>
+    <div class="legal"><span>Copyright &copy; 2026 footy1x. All rights reserved.</span><span>After Effects is a trademark of Adobe. Footy Tools isn't made by or affiliated with Adobe.</span></div>
+  </div>
+</footer>
+<script>
+  (function () {
+    var nav = document.querySelector(".gnav"), mb = document.querySelector(".menu-btn");
+    if (mb) mb.addEventListener("click", function () { var o = nav.classList.toggle("open"); mb.setAttribute("aria-expanded", String(o)); });
+    Array.prototype.forEach.call(document.querySelectorAll(".gnav-menu a"), function (a) {
+      a.addEventListener("click", function () { nav.classList.remove("open"); mb.setAttribute("aria-expanded", "false"); });
+    });
+  })();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "ae19d1f118524552bea4a54e08a238dd"}'></script>
+</body>
+</html>
